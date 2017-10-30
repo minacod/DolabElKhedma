@@ -1,6 +1,5 @@
-package com.example.shafy.dolabelkhedma;
+package com.example.shafy.dolabelkhedma.ui;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -24,12 +23,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
+import com.example.shafy.dolabelkhedma.R;
+import com.example.shafy.dolabelkhedma.adapter.LogListAdapter;
 import com.example.shafy.dolabelkhedma.data.DolabElKhedmaContract;
 import com.example.shafy.dolabelkhedma.data.DolabElKhedmaDbHelper;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 
 public class LogActivity extends AppCompatActivity implements LogListAdapter.OnPersonClicked{
 
@@ -149,7 +146,7 @@ public class LogActivity extends AppCompatActivity implements LogListAdapter.OnP
     }
     @Override
     public void onPersonClickedHandler(Cursor data , int position) {
-        Intent i = new Intent(this,PersonDetails.class);
+        Intent i = new Intent(this,AngelActivity.class);
         startActivity(i);
     }
 

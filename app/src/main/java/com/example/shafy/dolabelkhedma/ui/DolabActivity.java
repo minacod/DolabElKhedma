@@ -1,7 +1,9 @@
-package com.example.shafy.dolabelkhedma;
+package com.example.shafy.dolabelkhedma.ui;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.example.shafy.dolabelkhedma.R;
 
 public class DolabActivity extends AppCompatActivity {
 

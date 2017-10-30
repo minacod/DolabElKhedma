@@ -1,4 +1,4 @@
-package com.example.shafy.dolabelkhedma;
+package com.example.shafy.dolabelkhedma.ui;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -24,12 +24,12 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
 
+import com.example.shafy.dolabelkhedma.R;
+import com.example.shafy.dolabelkhedma.adapter.AttendanceAddingListAdapter;
+import com.example.shafy.dolabelkhedma.adapter.AttendanceRemovingListAdapter;
 import com.example.shafy.dolabelkhedma.data.DolabElKhedmaContract;
 import com.example.shafy.dolabelkhedma.data.DolabElKhedmaDbHelper;
-import com.example.shafy.dolabelkhedma.data.TestUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

@@ -10,7 +10,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -18,36 +18,36 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".AttendanceActivity"
+            android:name=".ui.AttendanceActivity"
             android:label="@string/main_add_atten"
             android:launchMode="singleTop"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName=".ui.MainActivity"
             android:theme="@style/AttendanceTheme" />
         <activity
-            android:name=".FridayActivity"
+            android:name=".ui.FridayActivity"
             android:label="@string/main_friday"
             android:launchMode="singleTop"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".ui.MainActivity" />
         <activity
-            android:name=".TripActivity"
+            android:name=".ui.TripActivity"
             android:label="@string/main_trip"
             android:launchMode="singleTop"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".ui.MainActivity" />
         <activity
-            android:name=".DolabActivity"
+            android:name=".ui.DolabActivity"
             android:label="@string/main_dolab"
             android:launchMode="singleTop"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".ui.MainActivity" />
         <activity
-            android:name=".LogActivity"
+            android:name=".ui.LogActivity"
             android:label="@string/main_log"
             android:launchMode="singleTop"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName=".ui.MainActivity"
             android:theme="@style/AttendanceTheme"/>
-        <activity android:name=".PersonDetails"
+        <activity android:name=".ui.AngelActivity"
             android:label="@string/main_log"
             android:launchMode="singleTop"
-            android:parentActivityName=".LogActivity"
+            android:parentActivityName=".ui.LogActivity"
             />
     </application>
 

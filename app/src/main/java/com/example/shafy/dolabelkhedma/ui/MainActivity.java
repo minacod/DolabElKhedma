@@ -1,4 +1,4 @@
-package com.example.shafy.dolabelkhedma;
+package com.example.shafy.dolabelkhedma.ui;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -6,10 +6,9 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+
+import com.example.shafy.dolabelkhedma.R;
+import com.example.shafy.dolabelkhedma.adapter.MainActivityOptionListAdapter;
 
 public class MainActivity extends AppCompatActivity implements MainActivityOptionListAdapter.OnOptionClicked{
 
