@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "696191506331",
+    "firebase_url": "https://dolab-elkedma.firebaseio.com",
+    "project_id": "dolab-elkedma",
+    "storage_bucket": "dolab-elkedma.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:696191506331:android:341ccb47d721918a",
+        "android_client_info": {
+          "package_name": "com.example.shafy.dolabelkhedma"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "696191506331-tah1hgu2p5ns8eci3fk2nnftuuvg3tfb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDfRDYTI0nXg4lfeha-OVhvgXywW4MWpr0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

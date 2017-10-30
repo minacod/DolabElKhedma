@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.shafy.dolabelkhedma">
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".AttendanceActivity"
+            android:label="@string/main_add_atten"
+            android:launchMode="singleTop"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AttendanceTheme" />
+        <activity
+            android:name=".FridayActivity"
+            android:label="@string/main_friday"
+            android:launchMode="singleTop"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".TripActivity"
+            android:label="@string/main_trip"
+            android:launchMode="singleTop"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".DolabActivity"
+            android:label="@string/main_dolab"
+            android:launchMode="singleTop"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".LogActivity"
+            android:label="@string/main_log"
+            android:launchMode="singleTop"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AttendanceTheme"/>
+        <activity android:name=".PersonDetails"
+            android:label="@string/main_log"
+            android:launchMode="singleTop"
+            android:parentActivityName=".LogActivity"
+            />
+    </application>
+
+</manifest>

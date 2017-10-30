@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">دولاب الخدمة</string>
+    <string name="main_add_atten">حضور اليوم</string>
+    <string name="main_activity">الصفحة الرئيسية</string>
+    <string name="main_trip">الانشطة</string>
+    <string name="main_friday">برنامج الجمعة</string>
+    <string name="main_dolab">الدولاب</string>
+    <string name="main_log">كشف الاسماء</string>
+    <string name="boys">اولاد</string>
+    <string name="girls">بنات</string>
+    <string name="active">الحضور</string>
+    <string name="passive">الغياب</string>
+    <string name="action_settings">Settings</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+</resources>

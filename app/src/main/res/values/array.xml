@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="spinner_list_item_array">
+        <item>@string/boys</item>
+        <item>@string/girls</item>
+    </string-array>
+    <string-array name="boys">
+        <item>@string/boys</item>
+        <item>@string/boys</item>
+        <item>@string/boys</item>
+        <item>@string/boys</item>
+        <item>@string/boys</item>
+        <item>@string/boys</item>
+    </string-array><string-array name="girls">
+    <item>@string/girls</item>
+    <item>@string/girls</item>
+    <item>@string/girls</item>
+    <item>@string/girls</item>
+    <item>@string/girls</item>
+    <item>@string/girls</item>
+    <item>@string/girls</item>
+    <item>@string/girls</item>
+    <item>@string/girls</item>
+</string-array>
+</resources>
