@@ -1,38 +1,38 @@
 package com.example.shafy.dolabelkhedma.model;
 
-/**
- * Created by shafy on 30/10/2017.
- */
 
 public class SimpleAngel {
 
-    private String name;
-    private boolean gender;
-    private int classNum;
+    private String mName;
+    private boolean mGender;
+    private int mClassNum;
+
+    public SimpleAngel() {
+    }
 
     public SimpleAngel(String name, boolean gender, int classNum) {
-        this.name = name;
-        this.gender = gender;
-        this.classNum = classNum;
+        this.mName = name;
+        this.mGender = gender;
+        this.mClassNum = classNum;
     }
 
     public String getName() {
-        return name;
+        return mName;
     }
 
     public boolean isGender() {
-        return gender;
+        return mGender;
     }
 
     public void setGender(boolean gender) {
-        this.gender = gender;
+        this.mGender = gender;
     }
 
     public int getClassNum() {
-        return classNum;
+        return mClassNum;
     }
 
     public void setClassNum(int classNum) {
-        this.classNum = classNum;
+        this.mClassNum= classNum;
     }
 }

@@ -6,14 +6,30 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
 
 import com.example.shafy.dolabelkhedma.R;
 import com.example.shafy.dolabelkhedma.adapter.MainActivityOptionListAdapter;
+import com.example.shafy.dolabelkhedma.data.FirebaseDatabaseUtils;
+import com.example.shafy.dolabelkhedma.model.Angel;
+import com.example.shafy.dolabelkhedma.utils.FirebaseReferencesUtils;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements MainActivityOptionListAdapter.OnOptionClicked{
 
+    private static final String TAG = "MainActivity";
     private RecyclerView mOptionsList;
     private MainActivityOptionListAdapter mListAdapter;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,7 +42,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityOptio
         mListAdapter =new MainActivityOptionListAdapter(this);
         mOptionsList.setAdapter(mListAdapter);
         mOptionsList.setHasFixedSize(true);
-
     }
 
     @Override
@@ -56,4 +71,5 @@ public class MainActivity extends AppCompatActivity implements MainActivityOptio
                 break;
         }
     }
+
 }
