@@ -7,6 +7,9 @@ public class SimpleAngel {
     private boolean mGender;
     private int mClassNum;
 
+    public SimpleAngel() {
+    }
+
     public SimpleAngel(String name, boolean gender, int classNum) {
         this.mName = name;
         this.mGender = gender;

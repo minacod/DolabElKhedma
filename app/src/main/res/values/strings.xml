@@ -12,5 +12,12 @@
     <string name="passive">الغياب</string>
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>
+
+    <!-- Firebase References -->
     <string name="firebase_simpleAngle">simpleAngel</string>
+    <string name="firebase_angel">angel</string>
+
+    <!-- Messages -->
+    <string name="angel_added">تمت الاضافه</string>
+
 </resources>

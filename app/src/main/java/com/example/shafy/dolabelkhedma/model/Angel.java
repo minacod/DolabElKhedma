@@ -12,6 +12,9 @@ public class Angel {
     private String mDate;
     private String mFather;
 
+    public Angel() {
+    }
+
     public Angel(String mName, String mAddress, boolean mGender, int mClass, String mFacebook, int mCoins, int mScore, String mDate, String mFather) {
         this.mName = mName;
         this.mAddress = mAddress;
