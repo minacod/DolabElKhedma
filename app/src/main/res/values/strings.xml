@@ -12,4 +12,8 @@
     <string name="passive">الغياب</string>
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>
+    <string name="person_s_image">Person\'s Image</string>
+    <string name="activity_adding_name">الأسم</string>
+    <string name="activity_adding_dob">تاريخ الميلاد</string>
+    <string name="facebook">فيس بوك :</string>
 </resources>

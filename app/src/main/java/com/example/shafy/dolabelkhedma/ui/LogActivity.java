@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -50,11 +51,14 @@ public class LogActivity extends AppCompatActivity implements LogListAdapter.OnP
     private static String[] CLASS= new String[]{"1","2","3"};
     private static  int gender;
     private static int classNumber;
+    private FloatingActionButton fab;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log);
 
+        if(getSupportActionBar()!=null)
+            getSupportActionBar().setElevation(0);
 
         mOnPersonClicked =this;
         gender=1;
@@ -71,6 +75,14 @@ public class LogActivity extends AppCompatActivity implements LogListAdapter.OnP
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
+
+        fab=(FloatingActionButton)findViewById(R.id.add_angel);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(LogActivity.this,AddingAngelActivity.class));
+            }
+        });
 
     }
 

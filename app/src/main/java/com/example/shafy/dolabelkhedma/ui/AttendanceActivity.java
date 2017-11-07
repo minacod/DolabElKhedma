@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
+import android.os.Build;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -30,6 +31,7 @@ import com.example.shafy.dolabelkhedma.adapter.AttendanceAddingListAdapter;
 import com.example.shafy.dolabelkhedma.adapter.AttendanceRemovingListAdapter;
 import com.example.shafy.dolabelkhedma.data.DolabElKhedmaContract;
 import com.example.shafy.dolabelkhedma.data.DolabElKhedmaDbHelper;
+import com.example.shafy.dolabelkhedma.data.TestUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -71,7 +73,8 @@ public class AttendanceActivity extends AppCompatActivity implements AttendanceR
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_attendance);
-
+        if(getSupportActionBar()!=null)
+            getSupportActionBar().setElevation(0);
         removed=this;
         adding=this;
         gender=1;
