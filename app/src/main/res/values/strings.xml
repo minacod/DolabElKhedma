@@ -12,19 +12,19 @@
     <string name="passive">الغياب</string>
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>
-<<<<<<< HEAD
     <string name="person_s_image">Person\'s Image</string>
     <string name="activity_adding_name">الأسم</string>
     <string name="activity_adding_dob">تاريخ الميلاد</string>
     <string name="facebook">فيس بوك :</string>
-=======
+    <string name="adding_angel_menu_save">حفظ</string>
 
     <!-- Firebase References -->
     <string name="firebase_simpleAngle">simpleAngel</string>
     <string name="firebase_angel">angel</string>
+    <string name="firebase_attendance">attendance</string>
+    <string name="firebase_phone">phone</string>
 
     <!-- Messages -->
     <string name="angel_added">تمت الاضافه</string>
 
->>>>>>> firebaseUtils
 </resources>

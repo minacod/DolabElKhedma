@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:tools="http://schemas.android.com/tools">
+<ScrollView
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/mainBackgroundColor">
@@ -16,6 +18,7 @@
             android:id="@+id/ll_angel_photo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layoutDirection="ltr"
             android:layout_marginEnd="24dp"
             android:layout_marginTop="32dp"
             android:background="@drawable/photo_holder"
@@ -33,6 +36,7 @@
 
         <EditText
             android:id="@+id/et_name"
+            android:layoutDirection="ltr"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
@@ -47,6 +51,7 @@
         <EditText
             android:id="@+id/et_dob"
             android:layout_width="0dp"
+            android:layoutDirection="ltr"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:ems="10"
@@ -63,12 +68,14 @@
             android:ems="10"
             android:hint="الفصل"
             android:inputType="number"
+            android:layoutDirection="ltr"
             app:layout_constraintEnd_toStartOf="@+id/guideline8"
             app:layout_constraintStart_toStartOf="@+id/et_name"
             app:layout_constraintTop_toTopOf="@+id/et_dob" />
 
         <TextView
             android:id="@+id/head1"
+            android:layoutDirection="ltr"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
@@ -87,6 +94,7 @@
         <View
             android:id="@+id/v_main_info_back"
             android:layout_width="0dp"
+            android:layoutDirection="ltr"
             android:layout_height="0dp"
             android:background="@color/colorAccentLight"
             app:layout_constraintBottom_toTopOf="@+id/head2"
@@ -101,6 +109,7 @@
             android:layout_marginEnd="32dp"
             android:layout_marginTop="16dp"
             android:text="العنوان"
+            android:layoutDirection="ltr"
             android:textColor="@color/primaryTextColor"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -112,6 +121,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="رقم المنزل"
+            android:layoutDirection="ltr"
             android:inputType="number"
             app:layout_constraintEnd_toEndOf="@+id/textView2"
             app:layout_constraintStart_toStartOf="@+id/ll_angel_photo"
@@ -125,7 +135,8 @@
             android:layout_marginStart="32dp"
             android:ems="10"
             android:hint="باقى العنوان"
-            android:inputType="text"
+            android:layoutDirection="ltr"
+            android:inputType="text|textMultiLine"
             app:layout_constraintEnd_toStartOf="@+id/et_home_number"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/et_home_number" />
@@ -156,16 +167,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:layoutDirection="ltr"
             android:text="@string/facebook"
             android:textColor="@color/primaryTextColor"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="@+id/et_home_number"
-            app:layout_constraintTop_toBottomOf="@+id/et_home_number" />
+            app:layout_constraintTop_toBottomOf="@+id/et_address" />
 
         <EditText
             android:id="@+id/et_fb_profile_url"
             android:layout_width="0dp"
             android:layout_height="42dp"
+            android:layoutDirection="ltr"
             android:layout_marginStart="32dp"
             android:ems="10"
             android:hint="الصفحة الشخصية"
@@ -181,6 +194,7 @@
             android:layout_marginEnd="32dp"
             android:layout_marginTop="16dp"
             android:text="الموبايل"
+            android:layoutDirection="ltr"
             android:textColor="@color/primaryTextColor"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -193,6 +207,7 @@
             android:ems="10"
             android:hint="رقم المخدوم"
             android:inputType="number"
+            android:layoutDirection="ltr"
             app:layout_constraintEnd_toEndOf="@+id/textView3"
             app:layout_constraintStart_toStartOf="@+id/et_fb_profile_url"
             app:layout_constraintTop_toBottomOf="@+id/textView3" />
@@ -200,6 +215,7 @@
         <EditText
             android:id="@+id/et_dad_phone"
             android:layout_width="0dp"
+            android:layoutDirection="ltr"
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="رقم الاب"
@@ -214,6 +230,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:ems="10"
+            android:layoutDirection="ltr"
             android:hint="رقم الام"
             android:inputType="number"
             app:layout_constraintEnd_toEndOf="@+id/et_dad_phone"
@@ -230,6 +247,7 @@
             android:layout_marginTop="24dp"
             android:background="@color/colorAccent"
             android:padding="8dp"
+            android:layoutDirection="ltr"
             android:text="بيانات اخرى"
             android:textAlignment="center"
             android:textColor="#ffffff"
@@ -243,6 +261,7 @@
             android:id="@+id/v_other_info_back"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layoutDirection="ltr"
             android:background="@color/colorAccentLight"
             app:layout_constraintBottom_toTopOf="@+id/linearLayout"
             app:layout_constraintEnd_toEndOf="@+id/head1"
@@ -256,6 +275,7 @@
             android:layout_marginEnd="32dp"
             android:layout_marginTop="16dp"
             android:text="اب الاعتراف"
+            android:layoutDirection="ltr"
             android:textColor="@color/primaryTextColor"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -267,6 +287,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             android:ems="10"
+            android:layoutDirection="ltr"
             android:hint="الاسم"
             android:inputType="textPersonName"
             app:layout_constraintEnd_toEndOf="@+id/textView5"
@@ -281,6 +302,7 @@
             android:text="عدد الكوينز"
             android:textColor="@color/primaryTextColor"
             android:textSize="18sp"
+            android:layoutDirection="ltr"
             app:layout_constraintEnd_toEndOf="@+id/et_p_father_name"
             app:layout_constraintStart_toStartOf="@+id/guideline9"
             app:layout_constraintTop_toBottomOf="@+id/et_p_father_name" />
@@ -293,6 +315,7 @@
             android:text="السكور"
             android:textColor="@color/primaryTextColor"
             android:textSize="18sp"
+            android:layoutDirection="ltr"
             app:layout_constraintEnd_toStartOf="@+id/guideline9"
             app:layout_constraintStart_toStartOf="@+id/et_p_father_name"
             app:layout_constraintTop_toBottomOf="@+id/et_p_father_name" />
@@ -305,7 +328,8 @@
             app:layout_constraintGuide_percent="0.5" />
 
         <EditText
-            android:id="@+id/editText6"
+            android:id="@+id/et_score"
+            android:layoutDirection="ltr"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
@@ -318,12 +342,13 @@
             app:layout_constraintTop_toBottomOf="@+id/textView8" />
 
         <EditText
-            android:id="@+id/editText7"
+            android:id="@+id/et_coins"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:ems="10"
+            android:layoutDirection="ltr"
             android:inputType="number"
             app:layout_constraintEnd_toEndOf="@+id/et_p_father_name"
             app:layout_constraintHorizontal_bias="0.187"
@@ -337,10 +362,11 @@
             android:layout_marginEnd="40dp"
             android:layout_marginTop="16dp"
             android:text="النوع"
+            android:layoutDirection="ltr"
             android:textColor="@color/primaryTextColor"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editText7" />
+            app:layout_constraintTop_toBottomOf="@+id/et_coins" />
 
         <RadioButton
             android:id="@+id/rb_male"
@@ -349,7 +375,8 @@
             android:layout_marginStart="8dp"
             android:checked="true"
             android:text="ذكر"
-            app:layout_constraintStart_toStartOf="@+id/editText7"
+            android:layoutDirection="ltr"
+            app:layout_constraintStart_toStartOf="@+id/et_coins"
             app:layout_constraintTop_toBottomOf="@+id/textView9" />
 
         <RadioButton
@@ -358,7 +385,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:text="انثى"
-            app:layout_constraintStart_toStartOf="@+id/editText6"
+            android:layoutDirection="ltr"
+            app:layout_constraintStart_toStartOf="@+id/et_score"
             app:layout_constraintTop_toTopOf="@+id/rb_male" />
 
         <LinearLayout
@@ -369,6 +397,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="24dp"
             android:orientation="vertical"
+            android:layoutDirection="ltr"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -377,3 +406,4 @@
 
     </android.support.constraint.ConstraintLayout>
 </ScrollView>
+</layout>

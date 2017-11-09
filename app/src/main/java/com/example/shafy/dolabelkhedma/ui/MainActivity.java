@@ -23,11 +23,14 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
+import static com.example.shafy.dolabelkhedma.utils.FirebaseReferencesUtils.getSyncedFirebaseInstanse;
+
 public class MainActivity extends AppCompatActivity implements MainActivityOptionListAdapter.OnOptionClicked{
 
     private static final String TAG = "MainActivity";
     private RecyclerView mOptionsList;
     private MainActivityOptionListAdapter mListAdapter;
+    FirebaseDatabase mFdb;
 
 
     @Override
@@ -35,6 +38,12 @@ public class MainActivity extends AppCompatActivity implements MainActivityOptio
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setTitle(getString(R.string.main_activity));
+
+        mFdb =getSyncedFirebaseInstanse();
+
+        DatabaseReference angleData= FirebaseReferencesUtils.getAngelsReference(MainActivity.this, mFdb);
+        DatabaseReference SimpleAngleData=FirebaseReferencesUtils.getSimpleAngelsReference(MainActivity.this, mFdb);
+
         mOptionsList = (RecyclerView) findViewById(R.id.rv_main_activity_options_list);
         //StaggeredGridLayoutManager layoutManager1 =new StaggeredGridLayoutManager(2,1);
         GridLayoutManager layoutManager=new GridLayoutManager(this,2, LinearLayoutManager.VERTICAL,false);

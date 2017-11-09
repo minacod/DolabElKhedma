@@ -11,6 +11,7 @@ public class Angel {
     private int mScore;
     private String mDate;
     private String mFather;
+    private String mImageUrl;
 
     public Angel() {
     }

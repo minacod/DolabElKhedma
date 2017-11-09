@@ -17,16 +17,30 @@ import java.util.HashMap;
 public class FirebaseReferencesUtils {
     private FirebaseReferencesUtils() {
     }
-
+    private static FirebaseDatabase  mFDB;
     public static FirebaseDatabase getSyncedFirebaseInstanse() {
-        FirebaseDatabase mFDB = FirebaseDatabase.getInstance();
-        mFDB.setPersistenceEnabled(true);
+        if(mFDB==null){
+            mFDB = FirebaseDatabase.getInstance();
+            mFDB.setPersistenceEnabled(true);
+        }
         return mFDB;
     }
 
     public static DatabaseReference getAngelsReference(Context context, FirebaseDatabase fdb) {
         DatabaseReference angelsRef = fdb.getReference(context.getString(R.string.firebase_angel));
+        angelsRef.keepSynced(true);
         return angelsRef;
+    }
+
+    public static DatabaseReference getAttendanceReference(Context context, FirebaseDatabase fdb) {
+        DatabaseReference attendanceRef = fdb.getReference(context.getString(R.string.firebase_attendance));
+        attendanceRef.keepSynced(true);
+        return attendanceRef;
+    }
+    public static DatabaseReference getPhoneReference(Context context, FirebaseDatabase fdb) {
+        DatabaseReference phoneRef = fdb.getReference(context.getString(R.string.firebase_phone));
+        phoneRef.keepSynced(true);
+        return phoneRef;
     }
 
     private static ChildEventListener getAngelsRefListener(final HashMap<String, Angel> angelsMap,
@@ -57,6 +71,7 @@ public class FirebaseReferencesUtils {
 
     public static DatabaseReference getSimpleAngelsReference(Context context, FirebaseDatabase fdb) {
         DatabaseReference simpleAngelsRef = fdb.getReference(context.getString(R.string.firebase_simpleAngle));
+        simpleAngelsRef.keepSynced(true);
         return simpleAngelsRef;
     }
 

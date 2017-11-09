@@ -1,6 +1,7 @@
 package com.example.shafy.dolabelkhedma.data;
 
 import android.content.Context;
+import android.os.storage.StorageManager;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.Toast;
@@ -11,6 +12,8 @@ import com.example.shafy.dolabelkhedma.model.SimpleAngel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 
 public class FirebaseDatabaseUtils {
@@ -19,24 +22,25 @@ public class FirebaseDatabaseUtils {
     private FirebaseDatabaseUtils() {
     }
 
-    public static void addAngel(final Context context, DatabaseReference angelRef, final DatabaseReference simpleAngelRef, final Angel angel) {
+    public static void addAngel(final Context context, DatabaseReference angelRef,
+                                final DatabaseReference simpleAngelRef, final Angel angel) {
         final String angelId = angelRef.push().getKey();
+
+        SimpleAngel simpleAngel = new SimpleAngel(angel.getmName(), angel.ismGender(), angel.getmClass());
+        addSimpleAngel(simpleAngelRef, simpleAngel, angelId);
+
         angelRef.child(angelId).setValue(angel).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                SimpleAngel simpleAngel = new SimpleAngel(angel.getmName(), angel.ismGender(), angel.getmClass());
-                addSimpleAngel(context, simpleAngelRef, simpleAngel, angelId);
+                Toast.makeText(context, context.getString(R.string.angel_added), Toast.LENGTH_SHORT).show();
             }
         });
+
     }
 
-    private static void addSimpleAngel(final Context contex, DatabaseReference simpleAngelRef, SimpleAngel simpleAngel, String angelId) {
-        simpleAngelRef.child(angelId).setValue(simpleAngel).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                Toast.makeText(contex, contex.getString(R.string.angel_added), Toast.LENGTH_SHORT).show();
-            }
-        });
+    private static void addSimpleAngel(DatabaseReference simpleAngelRef,
+                                       SimpleAngel simpleAngel, String angelId) {
+        simpleAngelRef.child(angelId).setValue(simpleAngel);
     }
 
 
