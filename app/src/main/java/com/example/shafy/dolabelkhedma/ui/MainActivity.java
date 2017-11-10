@@ -41,8 +41,11 @@ public class MainActivity extends AppCompatActivity implements MainActivityOptio
 
         mFdb =getSyncedFirebaseInstanse();
 
-        DatabaseReference angleData= FirebaseReferencesUtils.getAngelsReference(MainActivity.this, mFdb);
-        DatabaseReference SimpleAngleData=FirebaseReferencesUtils.getSimpleAngelsReference(MainActivity.this, mFdb);
+        DatabaseReference maleAngleData= FirebaseReferencesUtils.getAngelsReference(MainActivity.this, mFdb, true);
+        DatabaseReference maleSimpleAngleData=FirebaseReferencesUtils.getSimpleAngelsReference(MainActivity.this, mFdb, true);
+        DatabaseReference femaleAngleData= FirebaseReferencesUtils.getAngelsReference(MainActivity.this, mFdb, false);
+        DatabaseReference femaleSimpleAngleData=FirebaseReferencesUtils.getSimpleAngelsReference(MainActivity.this, mFdb, false);
+
 
         mOptionsList = (RecyclerView) findViewById(R.id.rv_main_activity_options_list);
         //StaggeredGridLayoutManager layoutManager1 =new StaggeredGridLayoutManager(2,1);

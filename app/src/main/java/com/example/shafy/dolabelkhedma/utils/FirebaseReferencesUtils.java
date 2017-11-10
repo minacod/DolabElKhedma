@@ -15,9 +15,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class FirebaseReferencesUtils {
+    private static FirebaseDatabase  mFDB;
+    private static DatabaseReference maleAngelsRef;
+    private static DatabaseReference femaleAngelsRef;
+    private static DatabaseReference maleSimpleAngelsRef;
+    private static DatabaseReference femaleSimpleAngelsRef;
+
     private FirebaseReferencesUtils() {
     }
-    private static FirebaseDatabase  mFDB;
+
     public static FirebaseDatabase getSyncedFirebaseInstanse() {
         if(mFDB==null){
             mFDB = FirebaseDatabase.getInstance();
@@ -26,10 +32,29 @@ public class FirebaseReferencesUtils {
         return mFDB;
     }
 
-    public static DatabaseReference getAngelsReference(Context context, FirebaseDatabase fdb) {
-        DatabaseReference angelsRef = fdb.getReference(context.getString(R.string.firebase_angel));
+    public static DatabaseReference getAngelsReference(Context context, FirebaseDatabase fdb, boolean gender) {
+        DatabaseReference angelsRef;
+        if(gender) {
+            angelsRef = getMaleAngelsRef(context, fdb);
+        } else {
+            angelsRef = getFemaleAngelsRef(context, fdb);
+        }
         angelsRef.keepSynced(true);
         return angelsRef;
+    }
+
+    private static DatabaseReference getMaleAngelsRef(Context context, FirebaseDatabase fdb) {
+        if(maleAngelsRef == null) {
+            maleAngelsRef = fdb.getReference(context.getString(R.string.firebase_maleangel));
+        }
+        return maleAngelsRef;
+    }
+
+    private static DatabaseReference getFemaleAngelsRef(Context context, FirebaseDatabase fdb) {
+        if(femaleAngelsRef == null) {
+            femaleAngelsRef = fdb.getReference(context.getString(R.string.firebase_femaleangel));
+        }
+        return maleAngelsRef;
     }
 
     public static DatabaseReference getAttendanceReference(Context context, FirebaseDatabase fdb) {
@@ -69,10 +94,29 @@ public class FirebaseReferencesUtils {
         };
     }
 
-    public static DatabaseReference getSimpleAngelsReference(Context context, FirebaseDatabase fdb) {
-        DatabaseReference simpleAngelsRef = fdb.getReference(context.getString(R.string.firebase_simpleAngle));
+    public static DatabaseReference getSimpleAngelsReference(Context context, FirebaseDatabase fdb, boolean gender) {
+        DatabaseReference simpleAngelsRef;
+        if(gender) {
+            simpleAngelsRef = getMaleSimpleAngelsRef(context, fdb);
+        } else {
+            simpleAngelsRef = getFemaleSimpleAngelsRef(context, fdb);
+        }
         simpleAngelsRef.keepSynced(true);
         return simpleAngelsRef;
+    }
+
+    private static DatabaseReference getMaleSimpleAngelsRef(Context context, FirebaseDatabase fdb) {
+        if (maleSimpleAngelsRef == null) {
+            maleSimpleAngelsRef = fdb.getReference(context.getString(R.string.firebase_maleSimpleAngle));
+        }
+        return maleAngelsRef;
+    }
+
+    private static DatabaseReference getFemaleSimpleAngelsRef(Context context, FirebaseDatabase fdb) {
+        if (femaleSimpleAngelsRef== null) {
+            femaleSimpleAngelsRef = fdb.getReference(context.getString(R.string.firebase_femaleSimpleAngle));
+        }
+        return femaleSimpleAngelsRef;
     }
 
     private static ChildEventListener getSimpleAngelsRefListener(final HashMap<String, SimpleAngel> simpleAngelsMap,

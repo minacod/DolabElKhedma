@@ -85,10 +85,11 @@ public class AddingAngelActivity extends AppCompatActivity {
         if(name.equals("")||add.equals("")||classNum.equals("")||coins.equals("")||score.equals("")){
             return;
         }
+        boolean gender = mBinding.rbMale.isChecked();
         Angel angel =new Angel(
                 name,
                 add,
-                mBinding.rbMale.isChecked(),
+                gender,
                 Integer.parseInt(classNum),
                 fbProfileUrl,
                 Integer.parseInt(coins),
@@ -97,9 +98,9 @@ public class AddingAngelActivity extends AppCompatActivity {
                 pFather
         );
 
-        DatabaseReference angleData= FirebaseReferencesUtils.getAngelsReference(AddingAngelActivity.this, mFdb);
-        DatabaseReference SimpleAngleData=FirebaseReferencesUtils.getSimpleAngelsReference(AddingAngelActivity.this, mFdb);
-        FirebaseDatabaseUtils.addAngel(AddingAngelActivity.this,angleData,SimpleAngleData,angel);
+        DatabaseReference angleData = FirebaseReferencesUtils.getAngelsReference(AddingAngelActivity.this, mFdb, gender);
+        DatabaseReference SimpleAngleData = FirebaseReferencesUtils.getSimpleAngelsReference(AddingAngelActivity.this, mFdb, gender);
+        FirebaseDatabaseUtils.addAngel(AddingAngelActivity.this,angleData,SimpleAngleData,angel, classNum);
 
     }
 }

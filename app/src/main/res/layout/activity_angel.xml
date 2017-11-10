@@ -21,7 +21,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/mina"
+        android:src="@drawable/contact_avatar"
         android:contentDescription="@string/person_s_image" />
 
     <TextView

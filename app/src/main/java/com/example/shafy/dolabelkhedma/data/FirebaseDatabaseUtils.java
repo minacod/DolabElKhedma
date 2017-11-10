@@ -23,25 +23,23 @@ public class FirebaseDatabaseUtils {
     }
 
     public static void addAngel(final Context context, DatabaseReference angelRef,
-                                final DatabaseReference simpleAngelRef, final Angel angel) {
+                                final DatabaseReference simpleAngelRef, final Angel angel, String angelClass) {
         final String angelId = angelRef.push().getKey();
 
-        SimpleAngel simpleAngel = new SimpleAngel(angel.getmName(), angel.ismGender(), angel.getmClass());
-        addSimpleAngel(simpleAngelRef, simpleAngel, angelId);
+        String simpleAngel = angel.getmName();
+        addSimpleAngel(simpleAngelRef, simpleAngel, angelId, angelClass);
 
-        angelRef.child(angelId).setValue(angel).addOnCompleteListener(new OnCompleteListener<Void>() {
+        angelRef.child("class_" + String.valueOf(angelClass))
+                .child(angelId).setValue(angel).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 Toast.makeText(context, context.getString(R.string.angel_added), Toast.LENGTH_SHORT).show();
             }
         });
-
     }
 
     private static void addSimpleAngel(DatabaseReference simpleAngelRef,
-                                       SimpleAngel simpleAngel, String angelId) {
-        simpleAngelRef.child(angelId).setValue(simpleAngel);
+                                       String simpleAngel, String angelId, String angelClass) {
+        simpleAngelRef.child("class_" + angelClass).child(angelId).setValue(simpleAngel);
     }
-
-
 }
