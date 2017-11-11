@@ -1,21 +1,42 @@
 package com.example.shafy.dolabelkhedma.ui;
 
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.databinding.DataBindingUtil;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.Toast;
 
 import com.example.shafy.dolabelkhedma.R;
 import com.example.shafy.dolabelkhedma.data.FirebaseDatabaseUtils;
 import com.example.shafy.dolabelkhedma.databinding.ActivityAddingAngelBinding;
 import com.example.shafy.dolabelkhedma.model.Angel;
 import com.example.shafy.dolabelkhedma.utils.FirebaseReferencesUtils;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageException;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.ByteArrayOutputStream;
 
 import static com.example.shafy.dolabelkhedma.utils.FirebaseReferencesUtils.getSyncedFirebaseInstanse;
 
@@ -23,6 +44,10 @@ public class AddingAngelActivity extends AppCompatActivity {
 
     ActivityAddingAngelBinding mBinding;
     FirebaseDatabase mFdb;
+    Bitmap mProfileImage;
+
+    public static final int PICK_IMAGE = 1;
+    private static final int REQUEST_STORAGE_PERMISSION = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,8 +79,77 @@ public class AddingAngelActivity extends AppCompatActivity {
                     mBinding.rbMale.setChecked(false);
             }
         });
+
+        mBinding.ivAngelPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (ContextCompat.checkSelfPermission(AddingAngelActivity.this,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        != PackageManager.PERMISSION_GRANTED) {
+
+                    // If you do not have permission, request it
+                    ActivityCompat.requestPermissions(AddingAngelActivity.this,
+                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                            REQUEST_STORAGE_PERMISSION);
+                } else {
+                    // Launch the camera if the permission exists
+                    launchGallary();
+                }
+
+            }
+        });
     }
 
+    private void launchGallary(){
+        Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
+        getIntent.setType("image/*");
+
+        Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        pickIntent.setType("image/*");
+
+        Intent chooserIntent = Intent.createChooser(getIntent, "Select Image");
+        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] {pickIntent});
+
+        startActivityForResult(chooserIntent, PICK_IMAGE);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_STORAGE_PERMISSION: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // If you get permission, launch the camera
+                    launchGallary();
+                } else {
+                    // If you do not get permission, show a Toast
+                    Toast.makeText(this, R.string.permission_denied, Toast.LENGTH_SHORT).show();
+                }
+                break;
+            }
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        if (requestCode == PICK_IMAGE && data!=null) {
+            Uri imageUri = data.getData();
+
+            String[] filePath = { MediaStore.Images.Media.DATA };
+            Cursor cursor = getContentResolver().query(imageUri, filePath, null, null, null);
+            cursor.moveToFirst();
+            String imagePath = cursor.getString(cursor.getColumnIndex(filePath[0]));
+
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+            mProfileImage = BitmapFactory.decodeFile(imagePath, options);
+            mBinding.ivAngelPhoto.setImageBitmap(mProfileImage);
+
+            cursor.close();
+        }
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.adding_angel_menu,menu);
@@ -96,6 +190,34 @@ public class AddingAngelActivity extends AppCompatActivity {
                 dob,
                 pFather
         );
+
+        FirebaseStorage mFS=FirebaseReferencesUtils.getFirebaseStorageInstanse();
+        StorageReference sr = FirebaseReferencesUtils.getAngelStorageReference(AddingAngelActivity.this,mFS);
+
+        // TODO 1 move this to FirebaseReferenceUtils
+        if(mProfileImage!=null) {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            mProfileImage.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            byte[] data = baos.toByteArray();
+
+            UploadTask uploadTask = sr.child("pp.jpeg").putBytes(data);
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Handle unsuccessful uploads
+                    int errorCode = ((StorageException) exception).getErrorCode();
+                    String errorMessage = exception.getMessage();
+                    Log.e("upload error : ", errorMessage);
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                    Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                }
+            });
+        }
+        // to here
 
         DatabaseReference angleData= FirebaseReferencesUtils.getAngelsReference(AddingAngelActivity.this, mFdb);
         DatabaseReference SimpleAngleData=FirebaseReferencesUtils.getSimpleAngelsReference(AddingAngelActivity.this, mFdb);

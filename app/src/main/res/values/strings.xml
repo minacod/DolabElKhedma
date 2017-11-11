@@ -17,6 +17,7 @@
     <string name="activity_adding_dob">تاريخ الميلاد</string>
     <string name="facebook">فيس بوك :</string>
     <string name="adding_angel_menu_save">حفظ</string>
+    <string name="permission_denied">لم يتم الحصول على الإذن</string>
 
     <!-- Firebase References -->
     <string name="firebase_simpleAngle">simpleAngel</string>

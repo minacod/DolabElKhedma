@@ -10,6 +10,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,12 +20,20 @@ public class FirebaseReferencesUtils {
     private FirebaseReferencesUtils() {
     }
     private static FirebaseDatabase  mFDB;
+    private static FirebaseStorage mFS;
     public static FirebaseDatabase getSyncedFirebaseInstanse() {
         if(mFDB==null){
             mFDB = FirebaseDatabase.getInstance();
             mFDB.setPersistenceEnabled(true);
         }
         return mFDB;
+    }
+
+    public static FirebaseStorage getFirebaseStorageInstanse() {
+        if(mFS==null){
+            mFS = FirebaseStorage.getInstance();
+        }
+        return mFS;
     }
 
     public static DatabaseReference getAngelsReference(Context context, FirebaseDatabase fdb) {
@@ -42,7 +52,9 @@ public class FirebaseReferencesUtils {
         phoneRef.keepSynced(true);
         return phoneRef;
     }
-
+    public static StorageReference getAngelStorageReference(Context context,FirebaseStorage fs){
+        return fs.getReference().child(context.getString(R.string.firebase_angel));
+    }
     private static ChildEventListener getAngelsRefListener(final HashMap<String, Angel> angelsMap,
                                                           final ArrayList<String> angelsIds) {
         return new ChildEventListener() {
