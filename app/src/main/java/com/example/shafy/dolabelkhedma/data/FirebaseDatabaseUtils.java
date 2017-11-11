@@ -29,8 +29,7 @@ public class FirebaseDatabaseUtils {
         String simpleAngel = angel.getmName();
         addSimpleAngel(simpleAngelRef, simpleAngel, angelId, angelClass);
 
-        angelRef.child("class_" + String.valueOf(angelClass))
-                .child(angelId).setValue(angel).addOnCompleteListener(new OnCompleteListener<Void>() {
+        angelRef.child(angelId).setValue(angel).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 Toast.makeText(context, context.getString(R.string.angel_added), Toast.LENGTH_SHORT).show();
