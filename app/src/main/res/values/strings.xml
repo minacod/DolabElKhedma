@@ -23,11 +23,10 @@
     <string name="firebase_femaleSimpleAngle">female_simple_Angel</string>
     <!--TODO simple_angle -->
     <string name="firebase_maleSimpleAngle">male_simpleAngel</string>
-    <string name="firebase_maleangel">male_angel</string>
-    <string name="firebase_femaleangel">female_angel</string>
     <string name="firebase_angel">angels</string>
     <string name="firebase_attendance">attendance</string>
     <string name="firebase_phone">phone</string>
+    <string name="firebase_dob">dob</string>
 
     <!-- Messages -->
     <string name="angel_added">تمت الاضافه</string>

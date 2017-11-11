@@ -9,14 +9,12 @@ public class Angel {
     private String mFacebook;
     private int mCoins;
     private int mScore;
-    private String mDate;
     private String mFather;
-    private String mImageUrl;
 
     public Angel() {
     }
 
-    public Angel(String mName, String mAddress, boolean mGender, int mClass, String mFacebook, int mCoins, int mScore, String mDate, String mFather) {
+    public Angel(String mName, String mAddress, boolean mGender, int mClass, String mFacebook, int mCoins, int mScore, String mFather) {
         this.mName = mName;
         this.mAddress = mAddress;
         this.mGender = mGender;
@@ -24,7 +22,6 @@ public class Angel {
         this.mFacebook = mFacebook;
         this.mCoins = mCoins;
         this.mScore = mScore;
-        this.mDate = mDate;
         this.mFather = mFather;
     }
 
@@ -82,14 +79,6 @@ public class Angel {
 
     public void setmScore(int mScore) {
         this.mScore = mScore;
-    }
-
-    public String getmDate() {
-        return mDate;
-    }
-
-    public void setmDate(String mDate) {
-        this.mDate = mDate;
     }
 
     public String getmFather() {

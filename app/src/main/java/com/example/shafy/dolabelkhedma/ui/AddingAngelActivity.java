@@ -26,6 +26,7 @@ import com.example.shafy.dolabelkhedma.R;
 import com.example.shafy.dolabelkhedma.data.FirebaseDatabaseUtils;
 import com.example.shafy.dolabelkhedma.databinding.ActivityAddingAngelBinding;
 import com.example.shafy.dolabelkhedma.model.Angel;
+import com.example.shafy.dolabelkhedma.model.Phone;
 import com.example.shafy.dolabelkhedma.utils.FirebaseReferencesUtils;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -176,6 +177,16 @@ public class AddingAngelActivity extends AppCompatActivity {
         String score = mBinding.etScore.getText().toString();
         String dob =mBinding.etDob.getText().toString();
         String pFather = mBinding.etPFatherName.getText().toString();
+        Phone[] phones = new Phone[3];
+        phones[0] = new Phone( "angel",mBinding.etAngelPhone.getText().toString());
+        phones[1] = new Phone( "dad",mBinding.etDadPhone.getText().toString());
+        phones[2] = new Phone( "mom",mBinding.etMomPhone.getText().toString());
+        // for future
+        //
+        /*
+        for(int i=0;i<3;i++)
+           // phones[i]=new Phone( ,mBinding.etAngelPhone.getText().toString());
+        */
 
         boolean gender = mBinding.rbMale.isChecked();
 
@@ -190,41 +201,21 @@ public class AddingAngelActivity extends AppCompatActivity {
                 fbProfileUrl,
                 Integer.parseInt(coins),
                 Integer.parseInt(score),
-                dob,
                 pFather
         );
 
         FirebaseStorage mFS=FirebaseReferencesUtils.getFirebaseStorageInstanse();
         StorageReference sr = FirebaseReferencesUtils.getAngelStorageReference(AddingAngelActivity.this,mFS);
 
-        // TODO 1 move this to FirebaseReferenceUtils
-        if(mProfileImage!=null) {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            mProfileImage.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-            byte[] data = baos.toByteArray();
-
-            UploadTask uploadTask = sr.child("pp.jpeg").putBytes(data);
-            uploadTask.addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                    // Handle unsuccessful uploads
-                    int errorCode = ((StorageException) exception).getErrorCode();
-                    String errorMessage = exception.getMessage();
-                    Log.e("upload error : ", errorMessage);
-                }
-            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
-                    Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                }
-            });
-        }
-        // to here
-
         DatabaseReference angleData= FirebaseReferencesUtils.getAngelsReference(AddingAngelActivity.this, mFdb);
-        DatabaseReference SimpleAngleData=FirebaseReferencesUtils.getSimpleAngelsReference(AddingAngelActivity.this, mFdb,gender);
-        FirebaseDatabaseUtils.addAngel(AddingAngelActivity.this,angleData,SimpleAngleData,angel,classNum);
-
+        DatabaseReference SimpleAngleData=FirebaseReferencesUtils.getSimpleAngelsReference(AddingAngelActivity.this,
+                mFdb,gender);
+        DatabaseReference phoneData= FirebaseReferencesUtils.getPhoneReference(AddingAngelActivity.this,mFdb);
+        DatabaseReference dobData = FirebaseReferencesUtils.getDobReference(AddingAngelActivity.this,mFdb);
+        FirebaseDatabaseUtils.addAngel(AddingAngelActivity.this,
+                angleData,SimpleAngleData,
+                angel,classNum,
+                sr,mProfileImage,phoneData,phones,
+                dobData,dob);
     }
 }

@@ -41,14 +41,16 @@ public class MainActivity extends AppCompatActivity implements MainActivityOptio
 
         mFdb =getSyncedFirebaseInstanse();
 
-        DatabaseReference maleAngleData= FirebaseReferencesUtils.getAngelsReference(MainActivity.this, mFdb, true);
+        //getting references to sync any data offline
+
+        DatabaseReference AngleData= FirebaseReferencesUtils.getAngelsReference(MainActivity.this, mFdb);
         DatabaseReference maleSimpleAngleData=FirebaseReferencesUtils.getSimpleAngelsReference(MainActivity.this, mFdb, true);
-        DatabaseReference femaleAngleData= FirebaseReferencesUtils.getAngelsReference(MainActivity.this, mFdb, false);
         DatabaseReference femaleSimpleAngleData=FirebaseReferencesUtils.getSimpleAngelsReference(MainActivity.this, mFdb, false);
+        FirebaseReferencesUtils.getPhoneReference(MainActivity.this, mFdb);
+        DatabaseReference dobRef =FirebaseReferencesUtils.getDobReference(MainActivity.this, mFdb);
 
 
-        mOptionsList = (RecyclerView) findViewById(R.id.rv_main_activity_options_list);
-        //StaggeredGridLayoutManager layoutManager1 =new StaggeredGridLayoutManager(2,1);
+        mOptionsList = findViewById(R.id.rv_main_activity_options_list);
         GridLayoutManager layoutManager=new GridLayoutManager(this,2, LinearLayoutManager.VERTICAL,false);
         mOptionsList.setLayoutManager(layoutManager);
         mListAdapter =new MainActivityOptionListAdapter(this);

@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.example.shafy.dolabelkhedma.R;
 import com.example.shafy.dolabelkhedma.model.Angel;
-import com.example.shafy.dolabelkhedma.model.SimpleAngel;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -21,11 +20,12 @@ public class FirebaseReferencesUtils {
     private static DatabaseReference angelsRef;
     private static DatabaseReference maleSimpleAngelsRef;
     private static DatabaseReference femaleSimpleAngelsRef;
+    private static DatabaseReference phoneRef;
+    private static DatabaseReference dobRef;
+    private static FirebaseStorage mFS;
 
     private FirebaseReferencesUtils() {
     }
-
-    private static FirebaseStorage mFS;
 
     public static FirebaseDatabase getSyncedFirebaseInstanse() {
         if (mFDB == null) {
@@ -38,11 +38,10 @@ public class FirebaseReferencesUtils {
     public static DatabaseReference getAngelsReference(Context context, FirebaseDatabase fdb) {
 
         if (angelsRef==null) {
-            angelsRef = fdb.getReference(context.getString(R.string.firebase_maleangel));
+            angelsRef = fdb.getReference(context.getString(R.string.firebase_angel));
         }
         return angelsRef;
     }
-
 
     public static FirebaseStorage getFirebaseStorageInstanse() {
         if(mFS==null){
@@ -56,9 +55,19 @@ public class FirebaseReferencesUtils {
         attendanceRef.keepSynced(true);
         return attendanceRef;
     }
+
+    public static DatabaseReference getDobReference(Context context, FirebaseDatabase fdb) {
+        if(dobRef==null){
+            dobRef = fdb.getReference(context.getString(R.string.firebase_dob));
+            dobRef.keepSynced(true);
+        }
+        return dobRef;
+    }
     public static DatabaseReference getPhoneReference(Context context, FirebaseDatabase fdb) {
-        DatabaseReference phoneRef = fdb.getReference(context.getString(R.string.firebase_phone));
-        phoneRef.keepSynced(true);
+        if(phoneRef==null) {
+            phoneRef = fdb.getReference(context.getString(R.string.firebase_phone));
+            phoneRef.keepSynced(true);
+        }
         return phoneRef;
     }
     public static StorageReference getAngelStorageReference(Context context,FirebaseStorage fs){
@@ -115,12 +124,12 @@ public class FirebaseReferencesUtils {
         return femaleSimpleAngelsRef;
     }
 
-    private static ChildEventListener getSimpleAngelsRefListener(final HashMap<String, SimpleAngel> simpleAngelsMap,
+    public static ChildEventListener getSimpleAngelsRefListener(final HashMap<String, String> simpleAngelsMap,
                                                            final ArrayList<String> simpleAngelsIds) {
         return new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                SimpleAngel newSimpleAngel = dataSnapshot.getValue(SimpleAngel.class);
+                String newSimpleAngel = dataSnapshot.getValue(String.class);
                 String simpleAngelId = dataSnapshot.getKey();
 
                 simpleAngelsMap.put(simpleAngelId, newSimpleAngel);

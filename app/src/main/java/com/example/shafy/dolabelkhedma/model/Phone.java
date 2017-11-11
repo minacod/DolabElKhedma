@@ -5,22 +5,12 @@ package com.example.shafy.dolabelkhedma.model;
  */
 
 public class Phone {
-    private String mAngelId;
     private String mPhoneOwner;
     private String mPhone;
 
-    public Phone(String mAngelId, String mPhoneOwner, String mPhone) {
-        this.mAngelId = mAngelId;
+    public Phone(String mPhoneOwner, String mPhone) {
         this.mPhoneOwner = mPhoneOwner;
         this.mPhone = mPhone;
-    }
-
-    public String getmAngelId() {
-        return mAngelId;
-    }
-
-    public void setmAngelId(String mAngelId) {
-        this.mAngelId = mAngelId;
     }
 
     public String getmPhoneOwner() {

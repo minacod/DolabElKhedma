@@ -12,6 +12,9 @@ import android.widget.TextView;
 import com.example.shafy.dolabelkhedma.R;
 import com.example.shafy.dolabelkhedma.data.DolabElKhedmaContract;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 /**
  * Created by shafy on 21/10/2017.
  */
@@ -19,16 +22,17 @@ import com.example.shafy.dolabelkhedma.data.DolabElKhedmaContract;
 public class LogListAdapter extends RecyclerView.Adapter<LogListAdapter.ViewHolder> {
 
     private OnPersonClicked mOnPersonClicked;
-    private Cursor mData;
-
-    public LogListAdapter(OnPersonClicked onPersonClicked, Cursor data){
+    private HashMap<String, String> mSimpleAngelsMap;
+    private ArrayList<String> mSimpleAngelsIds;
+    public LogListAdapter(OnPersonClicked onPersonClicked, HashMap<String, String> simpleAngelsMap, ArrayList<String> simpleAngelsIds){
         mOnPersonClicked = onPersonClicked;
-        mData =data;
+        mSimpleAngelsMap=simpleAngelsMap;
+        mSimpleAngelsIds=simpleAngelsIds;
         notifyDataSetChanged();
     }
 
     public interface OnPersonClicked{
-        public void onPersonClickedHandler(Cursor data, int position);
+        void onPersonClickedHandler(ArrayList<String> simpleAngelsIds, int position);
     }
 
     @Override
@@ -47,10 +51,10 @@ public class LogListAdapter extends RecyclerView.Adapter<LogListAdapter.ViewHold
 
     @Override
     public int getItemCount() {
-        if(mData ==null)
+        if(mSimpleAngelsIds ==null)
             return 0;
         else
-            return mData.getCount();
+            return mSimpleAngelsIds.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
@@ -61,23 +65,21 @@ public class LogListAdapter extends RecyclerView.Adapter<LogListAdapter.ViewHold
         public ViewHolder(View itemView) {
             super(itemView);
             mContext=itemView.getContext();
-            mName=(TextView)itemView.findViewById(R.id.tv_main_option_text);
-            mIcon =(ImageView)itemView.findViewById(R.id.iv_main_option_icon);
+            mName= itemView.findViewById(R.id.tv_main_option_text);
+            mIcon = itemView.findViewById(R.id.iv_main_option_icon);
             mIcon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_add));
             itemView.setOnClickListener(this);
 
         }
         void onBindViewHolder(int position){
-            mData.moveToPosition(position);
-            String tmp= mData.getString(mData.getColumnIndex(DolabElKhedmaContract.MainDataEnrty.COLUMNS_NAME));
-            String tmp2= mData.getString(mData.getColumnIndex(DolabElKhedmaContract.MainDataEnrty._ID));
-            mName.setText(tmp +" "+ tmp2);
+            String id = mSimpleAngelsIds.get(position);
+            mName.setText(mSimpleAngelsMap.get(id));
         }
 
         @Override
         public void onClick(View v) {
             int position=getAdapterPosition();
-            mOnPersonClicked.onPersonClickedHandler(mData,position);
+            mOnPersonClicked.onPersonClickedHandler(mSimpleAngelsIds,position);
         }
     }
 }

@@ -28,6 +28,19 @@ import com.example.shafy.dolabelkhedma.R;
 import com.example.shafy.dolabelkhedma.adapter.LogListAdapter;
 import com.example.shafy.dolabelkhedma.data.DolabElKhedmaContract;
 import com.example.shafy.dolabelkhedma.data.DolabElKhedmaDbHelper;
+import com.example.shafy.dolabelkhedma.model.Angel;
+import com.example.shafy.dolabelkhedma.model.SimpleAngel;
+import com.example.shafy.dolabelkhedma.utils.FirebaseReferencesUtils;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class LogActivity extends AppCompatActivity implements LogListAdapter.OnPersonClicked{
 
@@ -38,6 +51,7 @@ public class LogActivity extends AppCompatActivity implements LogListAdapter.OnP
      */
     private  ViewPager mViewPager;
     private static SQLiteDatabase mDb;
+    private static FirebaseDatabase mFDb;
 
     @Override
     protected void onResume() {
@@ -49,34 +63,34 @@ public class LogActivity extends AppCompatActivity implements LogListAdapter.OnP
     private static Cursor  mNotAdded;
     private static LogListAdapter.OnPersonClicked mOnPersonClicked;
     private static String[] CLASS= new String[]{"1","2","3"};
-    private static  int gender;
+    private static  boolean gender;
     private static int classNumber;
     private FloatingActionButton fab;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log);
-
+        mFDb = FirebaseReferencesUtils.getSyncedFirebaseInstanse();
         if(getSupportActionBar()!=null)
             getSupportActionBar().setElevation(0);
 
         mOnPersonClicked =this;
-        gender=1;
+        gender=true;
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
 
         dbHelper=new DolabElKhedmaDbHelper(this);
         mDb = dbHelper.getWritableDatabase();
 
-        mViewPager = (ViewPager) findViewById(R.id.container);
+        mViewPager = findViewById(R.id.container);
         mViewPager.setRotation(180);
 
         fillPager();
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        TabLayout tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
-        fab=(FloatingActionButton)findViewById(R.id.add_angel);
+        fab= findViewById(R.id.add_angel);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -129,11 +143,11 @@ public class LogActivity extends AppCompatActivity implements LogListAdapter.OnP
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Context context =view.getContext();
                 if(parent.getItemAtPosition(position).equals(context.getString(R.string.boys))){
-                    gender=1;
+                    gender=true;
                     updatePager();
                 }
                 else {
-                    gender=0;
+                    gender=false;
                     updatePager();
                 }
             }
@@ -157,7 +171,7 @@ public class LogActivity extends AppCompatActivity implements LogListAdapter.OnP
         return super.onOptionsItemSelected(item);
     }
     @Override
-    public void onPersonClickedHandler(Cursor data , int position) {
+    public void onPersonClickedHandler( ArrayList<String> simpleAngelsIds , int position) {
         Intent i = new Intent(this,AngelActivity.class);
         startActivity(i);
     }
@@ -231,15 +245,48 @@ public class LogActivity extends AppCompatActivity implements LogListAdapter.OnP
                                  Bundle savedInstanceState) {
             mRootView = inflater.inflate(R.layout.fragment_log, container, false);
             mRootView.setRotation(180);
-            classNumber= getArguments().getInt(ARG_SECTION_NUMBER)-1;
-            getDataNotAdded(classNumber);
+            classNumber= getArguments().getInt(ARG_SECTION_NUMBER);
+            //getDataNotAdded(classNumber-1);
 
-            LogListAdapter mAdapter2=new LogListAdapter(mOnPersonClicked,mNotAdded);
-            RecyclerView rv2 =(RecyclerView)mRootView.findViewById(R.id.rv_attendance_passive);
+
+
+            DatabaseReference simpleAngleRef= FirebaseReferencesUtils.getSimpleAngelsReference(getContext(),mFDb,gender).child("class_"+String.valueOf(classNumber));
+            Query querySimpleAngle = simpleAngleRef.orderByValue();
+            final HashMap<String, String> simpleAngelsMap=new HashMap<String, String>();
+            final ArrayList<String> simpleAngelsIds=new ArrayList<String>();
+
+
+            final LogListAdapter mAdapter=new LogListAdapter(mOnPersonClicked,simpleAngelsMap,simpleAngelsIds);
+
+            querySimpleAngle.addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                    String newSimpleAngel = dataSnapshot.getValue(String.class);
+                    String simpleAngelId = dataSnapshot.getKey();
+
+                    simpleAngelsMap.put(simpleAngelId, newSimpleAngel);
+                    simpleAngelsIds.add(simpleAngelId);
+                    mAdapter.notifyDataSetChanged();
+                }
+                @Override
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                }
+                @Override
+                public void onChildRemoved(DataSnapshot dataSnapshot) {
+                }
+                @Override
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                }
+            });
+
+            RecyclerView rv = mRootView.findViewById(R.id.rv_attendance_passive);
             LinearLayoutManager layoutManager2 =new LinearLayoutManager(mRootView.getContext(),LinearLayoutManager.VERTICAL,false);
-            rv2.setLayoutManager(layoutManager2);
-            rv2.setAdapter(mAdapter2);
-            rv2.setHasFixedSize(true);
+            rv.setLayoutManager(layoutManager2);
+            rv.setAdapter(mAdapter);
+            rv.setHasFixedSize(true);
 
             return mRootView;
         }
