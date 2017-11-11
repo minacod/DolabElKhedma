@@ -20,8 +20,10 @@
     <string name="permission_denied">لم يتم الحصول على الإذن</string>
 
     <!-- Firebase References -->
-    <string name="firebase_simpleAngle">simpleAngel</string>
-    <string name="firebase_angel">angel</string>
+    <string name="firebase_femaleSimpleAngle">female_simple_Angel</string>
+    <string name="firebase_maleSimpleAngle">male_simpleAngel</string>
+    <string name="firebase_maleangel">male_angel</string>
+    <string name="firebase_femaleangel">female_angel</string>
     <string name="firebase_attendance">attendance</string>
     <string name="firebase_phone">phone</string>
 
