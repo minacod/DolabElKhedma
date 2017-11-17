@@ -2,14 +2,13 @@ package com.example.shafy.dolabelkhedma.ui;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Build;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -26,10 +25,6 @@ import android.widget.Spinner;
 
 import com.example.shafy.dolabelkhedma.R;
 import com.example.shafy.dolabelkhedma.adapter.LogListAdapter;
-import com.example.shafy.dolabelkhedma.data.DolabElKhedmaContract;
-import com.example.shafy.dolabelkhedma.data.DolabElKhedmaDbHelper;
-import com.example.shafy.dolabelkhedma.model.Angel;
-import com.example.shafy.dolabelkhedma.model.SimpleAngel;
 import com.example.shafy.dolabelkhedma.utils.FirebaseReferencesUtils;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -37,7 +32,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -59,8 +53,7 @@ public class LogActivity extends AppCompatActivity implements LogListAdapter.OnP
         updatePager();
     }
 
-    private static DolabElKhedmaDbHelper dbHelper;
-    private static Cursor  mNotAdded;
+
     private static LogListAdapter.OnPersonClicked mOnPersonClicked;
     private static String[] CLASS= new String[]{"1","2","3"};
     private static  boolean gender;
@@ -79,8 +72,6 @@ public class LogActivity extends AppCompatActivity implements LogListAdapter.OnP
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
 
-        dbHelper=new DolabElKhedmaDbHelper(this);
-        mDb = dbHelper.getWritableDatabase();
 
         mViewPager = findViewById(R.id.container);
         mViewPager.setRotation(180);
@@ -112,27 +103,12 @@ public class LogActivity extends AppCompatActivity implements LogListAdapter.OnP
     }
 
 
-
-    public static Cursor getDataNotAdded(int i){
-
-        String orderedBy = DolabElKhedmaContract.MainDataEnrty.COLUMNS_NAME+" ASC";
-
-        mNotAdded =mDb.query(DolabElKhedmaContract.MainDataEnrty.TABLE_NAME,
-                null,
-                DolabElKhedmaContract.MainDataEnrty.COLUMNS_GENDER+" = "+gender +
-                " AND "+DolabElKhedmaContract.MainDataEnrty.COLUMNS_Class+" = "+CLASS[i] ,null,
-                null,null,orderedBy);
-
-        return mNotAdded;
-    }
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.attendance_manu, menu);
         MenuItem item = menu.findItem(R.id.spinner);
-        final Spinner spinner = (Spinner) MenuItemCompat.getActionView(item);
+        final Spinner spinner = (Spinner) item.getActionView();
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.spinner_list_item_array, android.R.layout.simple_spinner_item);
@@ -170,9 +146,16 @@ public class LogActivity extends AppCompatActivity implements LogListAdapter.OnP
 
         return super.onOptionsItemSelected(item);
     }
+
+    /*
+
+    app behavior when the user choose one angle to see it's full data
+
+     */
     @Override
-    public void onPersonClickedHandler( ArrayList<String> simpleAngelsIds , int position) {
+    public void onPersonClickedHandler( String id) {
         Intent i = new Intent(this,AngelActivity.class);
+        i.putExtra("id",id);
         startActivity(i);
     }
 
@@ -246,7 +229,6 @@ public class LogActivity extends AppCompatActivity implements LogListAdapter.OnP
             mRootView = inflater.inflate(R.layout.fragment_log, container, false);
             mRootView.setRotation(180);
             classNumber= getArguments().getInt(ARG_SECTION_NUMBER);
-            //getDataNotAdded(classNumber-1);
 
 
 
@@ -263,16 +245,28 @@ public class LogActivity extends AppCompatActivity implements LogListAdapter.OnP
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                     String newSimpleAngel = dataSnapshot.getValue(String.class);
                     String simpleAngelId = dataSnapshot.getKey();
-
                     simpleAngelsMap.put(simpleAngelId, newSimpleAngel);
                     simpleAngelsIds.add(simpleAngelId);
                     mAdapter.notifyDataSetChanged();
                 }
                 @Override
                 public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                    String newSimpleAngel = dataSnapshot.getValue(String.class);
+                    String simpleAngelId = dataSnapshot.getKey();
+                    if(Build.VERSION.SDK_INT>=24)
+                        simpleAngelsMap.replace(simpleAngelId,newSimpleAngel);
+                    else {
+                        simpleAngelsMap.remove(simpleAngelId);
+                        simpleAngelsMap.put(simpleAngelId,newSimpleAngel);
+                    }
+                    mAdapter.notifyDataSetChanged();
                 }
                 @Override
                 public void onChildRemoved(DataSnapshot dataSnapshot) {
+                    String simpleAngelId = dataSnapshot.getKey();
+                    simpleAngelsMap.remove(simpleAngelId);
+                    simpleAngelsIds.remove(simpleAngelsIds.indexOf(simpleAngelId));
+                    mAdapter.notifyDataSetChanged();
                 }
                 @Override
                 public void onChildMoved(DataSnapshot dataSnapshot, String s) {

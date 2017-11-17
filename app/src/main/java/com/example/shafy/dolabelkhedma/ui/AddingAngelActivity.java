@@ -15,11 +15,14 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
+import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.example.shafy.dolabelkhedma.R;
@@ -28,16 +31,10 @@ import com.example.shafy.dolabelkhedma.databinding.ActivityAddingAngelBinding;
 import com.example.shafy.dolabelkhedma.model.Angel;
 import com.example.shafy.dolabelkhedma.model.Phone;
 import com.example.shafy.dolabelkhedma.utils.FirebaseReferencesUtils;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageException;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
-
-import java.io.ByteArrayOutputStream;
 
 import static com.example.shafy.dolabelkhedma.utils.FirebaseReferencesUtils.getSyncedFirebaseInstanse;
 
@@ -46,6 +43,7 @@ public class AddingAngelActivity extends AppCompatActivity {
     ActivityAddingAngelBinding mBinding;
     FirebaseDatabase mFdb;
     Bitmap mProfileImage;
+    String mClassNum;
 
     public static final int PICK_IMAGE = 1;
     private static final int REQUEST_STORAGE_PERMISSION = 1;
@@ -64,6 +62,22 @@ public class AddingAngelActivity extends AppCompatActivity {
                 DialogFragment newFragment = new DatePickerFragment();
                 newFragment.show(getSupportFragmentManager(), "datePicker");
                 }
+            }
+        });
+        mClassNum="1";
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.ClassesList, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mBinding.etClass.setAdapter(adapter);
+        mBinding.etClass.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                mClassNum=String.valueOf(position+1);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
         mBinding.rbMale.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -171,7 +185,7 @@ public class AddingAngelActivity extends AppCompatActivity {
 
         String name = mBinding.etName.getText().toString();
         String add = (mBinding.etHomeNumber.getText().toString() +" "+ mBinding.etAddress.getText().toString()) ;
-        String classNum = mBinding.etClass.getText().toString();
+        //String classNum = mBinding.etClass.getText().toString();
         String fbProfileUrl = mBinding.etFbProfileUrl.getText().toString();
         String coins = mBinding.etCoins.getText().toString();
         String score = mBinding.etScore.getText().toString();
@@ -190,14 +204,14 @@ public class AddingAngelActivity extends AppCompatActivity {
 
         boolean gender = mBinding.rbMale.isChecked();
 
-        if(name.equals("")||add.equals("")||classNum.equals("")||coins.equals("")||score.equals("")){
+        if(name.equals("")||add.equals("")||mClassNum.equals("")||coins.equals("")||score.equals("")){
             return;
         }
         Angel angel =new Angel(
                 name,
                 add,
                 gender,
-                Integer.parseInt(classNum),
+                Integer.parseInt(mClassNum),
                 fbProfileUrl,
                 Integer.parseInt(coins),
                 Integer.parseInt(score),
@@ -214,8 +228,10 @@ public class AddingAngelActivity extends AppCompatActivity {
         DatabaseReference dobData = FirebaseReferencesUtils.getDobReference(AddingAngelActivity.this,mFdb);
         FirebaseDatabaseUtils.addAngel(AddingAngelActivity.this,
                 angleData,SimpleAngleData,
-                angel,classNum,
+                angel,mClassNum,
                 sr,mProfileImage,phoneData,phones,
                 dobData,dob);
     }
+
+
 }

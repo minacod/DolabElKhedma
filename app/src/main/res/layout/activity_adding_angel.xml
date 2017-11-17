@@ -61,7 +61,18 @@
             app:layout_constraintEnd_toEndOf="@+id/et_name"
             app:layout_constraintStart_toStartOf="@+id/guideline8" />
 
-        <EditText
+        <Spinner
+            android:id="@+id/et_class"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:ems="10"
+            android:layoutDirection="ltr"
+            app:layout_constraintBottom_toBottomOf="@+id/et_dob"
+            app:layout_constraintEnd_toStartOf="@+id/guideline8"
+            app:layout_constraintStart_toStartOf="@+id/et_name"
+            app:layout_constraintTop_toTopOf="@+id/et_dob" />
+
+        <!--<EditText
             android:id="@+id/et_class"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -71,7 +82,7 @@
             android:layoutDirection="ltr"
             app:layout_constraintEnd_toStartOf="@+id/guideline8"
             app:layout_constraintStart_toStartOf="@+id/et_name"
-            app:layout_constraintTop_toTopOf="@+id/et_dob" />
+            app:layout_constraintTop_toTopOf="@+id/et_dob" />-->
 
         <TextView
             android:id="@+id/head1"

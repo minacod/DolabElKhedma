@@ -4,22 +4,11 @@
         <item>@string/boys</item>
         <item>@string/girls</item>
     </string-array>
-    <string-array name="boys">
-        <item>@string/boys</item>
-        <item>@string/boys</item>
-        <item>@string/boys</item>
-        <item>@string/boys</item>
-        <item>@string/boys</item>
-        <item>@string/boys</item>
-    </string-array><string-array name="girls">
-    <item>@string/girls</item>
-    <item>@string/girls</item>
-    <item>@string/girls</item>
-    <item>@string/girls</item>
-    <item>@string/girls</item>
-    <item>@string/girls</item>
-    <item>@string/girls</item>
-    <item>@string/girls</item>
-    <item>@string/girls</item>
-</string-array>
+
+    <!--TODO extract string resources-->
+    <string-array name="ClassesList">
+        <item>أولى</item>
+        <item>تانية</item>
+        <item>تالتة</item>
+    </string-array>
 </resources>

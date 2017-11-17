@@ -1,7 +1,11 @@
 package com.example.shafy.dolabelkhedma.adapter;
 
 import android.content.Context;
-import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.support.constraint.ConstraintLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,11 +13,22 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestBuilder;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.shafy.dolabelkhedma.R;
-import com.example.shafy.dolabelkhedma.data.DolabElKhedmaContract;
+import com.example.shafy.dolabelkhedma.ui.GlideApp;
+import com.example.shafy.dolabelkhedma.ui.GlideRequest;
+import com.example.shafy.dolabelkhedma.utils.FirebaseReferencesUtils;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
 
 /**
  * Created by shafy on 21/10/2017.
@@ -32,13 +47,13 @@ public class LogListAdapter extends RecyclerView.Adapter<LogListAdapter.ViewHold
     }
 
     public interface OnPersonClicked{
-        void onPersonClickedHandler(ArrayList<String> simpleAngelsIds, int position);
+        void onPersonClickedHandler(String id);
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
-        int listItmId= R.layout.home_options_list_item;
+        int listItmId= R.layout.log_list_item;
         LayoutInflater inflater=LayoutInflater.from(context);
         View view =inflater.inflate(listItmId,parent,false);
         return new ViewHolder(view);
@@ -61,25 +76,46 @@ public class LogListAdapter extends RecyclerView.Adapter<LogListAdapter.ViewHold
 
         Context mContext;
         TextView mName;
-        ImageView mIcon;
+        ConstraintLayout parent;
+
+        ImageView imageView;
+        FirebaseStorage fs;
+        StorageReference sr;
         public ViewHolder(View itemView) {
             super(itemView);
             mContext=itemView.getContext();
+            fs= FirebaseReferencesUtils.getFirebaseStorageInstanse();
+            sr = FirebaseReferencesUtils.getAngelStorageReference(mContext,fs);
             mName= itemView.findViewById(R.id.tv_main_option_text);
-            mIcon = itemView.findViewById(R.id.iv_main_option_icon);
-            mIcon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_add));
+            imageView= itemView.findViewById(R.id.profile_image);
+            parent = itemView.findViewById(R.id.cl_log_activity_list_itm);
             itemView.setOnClickListener(this);
 
         }
         void onBindViewHolder(int position){
+            if(position%2!=0){
+                parent.setRotation(180);
+                mName.setRotation(180);
+                imageView.setRotation(180);
+            }
+
             String id = mSimpleAngelsIds.get(position);
             mName.setText(mSimpleAngelsMap.get(id));
-        }
 
+
+            GlideApp.with(mContext)
+                    .load(sr.child(id).child("pp"))
+                    .apply(RequestOptions.circleCropTransform())
+                    .placeholder(R.drawable.ic_contact_avatar_circular)
+                    .error(R.drawable.ic_contact_avatar_circular)
+                    .thumbnail()
+                    .into(imageView);
+        }
         @Override
         public void onClick(View v) {
             int position=getAdapterPosition();
-            mOnPersonClicked.onPersonClickedHandler(mSimpleAngelsIds,position);
+
+            mOnPersonClicked.onPersonClickedHandler(mSimpleAngelsIds.get(position));
         }
     }
 }

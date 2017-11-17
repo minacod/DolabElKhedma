@@ -11,7 +11,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.shafy.dolabelkhedma.R;
-import com.example.shafy.dolabelkhedma.data.DolabElKhedmaContract;
 
 /**
  * Created by shafy on 19/10/2017.
@@ -29,7 +28,7 @@ public class AttendanceAddingListAdapter extends RecyclerView.Adapter<Attendance
     }
 
     public interface OnAttendanceAdding{
-        public void OnAddingHandler(Cursor data,int position);
+        void OnAddingHandler(Cursor data, int position);
     }
 
     @Override
@@ -64,10 +63,10 @@ public class AttendanceAddingListAdapter extends RecyclerView.Adapter<Attendance
         public ViewHolder(View itemView) {
             super(itemView);
             mContext=itemView.getContext();
-            mName=(TextView)itemView.findViewById(R.id.tv_main_option_text);
-            mAdd=(ImageView)itemView.findViewById(R.id.iv_main_option_icon);
-            right=(LinearLayout)itemView.findViewById(R.id.ll_list_item_right);
-            left=(LinearLayout)itemView.findViewById(R.id.ll_list_item_left);
+            mName= itemView.findViewById(R.id.tv_main_option_text);
+            mAdd= itemView.findViewById(R.id.iv_main_option_icon);
+            right= itemView.findViewById(R.id.ll_list_item_right);
+            left= itemView.findViewById(R.id.ll_list_item_left);
             right.setBackground(mContext.getResources().getDrawable(R.drawable.shape_right_green));
             left.setBackground(mContext.getResources().getDrawable(R.drawable.shape_left_green));
             mAdd.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_add));
@@ -75,10 +74,7 @@ public class AttendanceAddingListAdapter extends RecyclerView.Adapter<Attendance
 
         }
         void onBindViewHolder(int position){
-            mDataAdded.moveToPosition(position);
-            String tmp=mDataAdded.getString(mDataAdded.getColumnIndex(DolabElKhedmaContract.MainDataEnrty.COLUMNS_NAME));
-            String tmp2=mDataAdded.getString(mDataAdded.getColumnIndex(DolabElKhedmaContract.MainDataEnrty._ID));
-            mName.setText(tmp +" "+ tmp2);
+
         }
 
         @Override

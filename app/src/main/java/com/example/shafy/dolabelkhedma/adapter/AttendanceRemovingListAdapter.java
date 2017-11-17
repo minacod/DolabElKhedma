@@ -11,7 +11,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.shafy.dolabelkhedma.R;
-import com.example.shafy.dolabelkhedma.data.DolabElKhedmaContract;
 
 /**
  * Created by shafy on 19/10/2017.
@@ -29,7 +28,7 @@ public class AttendanceRemovingListAdapter extends RecyclerView.Adapter<Attendan
     }
 
     public interface OnAttendanceRemoved{
-        public void OnRemoveHandler(String postion);
+        void OnRemoveHandler(String postion);
     }
 
     @Override
@@ -64,10 +63,10 @@ public class AttendanceRemovingListAdapter extends RecyclerView.Adapter<Attendan
         public ViewHolder(View itemView) {
             super(itemView);
             mContext=itemView.getContext();
-            mName=(TextView)itemView.findViewById(R.id.tv_main_option_text);
-            mAdd=(ImageView)itemView.findViewById(R.id.iv_main_option_icon);
-            right=(LinearLayout)itemView.findViewById(R.id.ll_list_item_right);
-            left=(LinearLayout)itemView.findViewById(R.id.ll_list_item_left);
+            mName= itemView.findViewById(R.id.tv_main_option_text);
+            mAdd= itemView.findViewById(R.id.iv_main_option_icon);
+            right= itemView.findViewById(R.id.ll_list_item_right);
+            left= itemView.findViewById(R.id.ll_list_item_left);
             right.setBackground(mContext.getResources().getDrawable(R.drawable.shape_right_red));
             left.setBackground(mContext.getResources().getDrawable(R.drawable.shape_left_red));
             mAdd.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_remove));
@@ -76,17 +75,11 @@ public class AttendanceRemovingListAdapter extends RecyclerView.Adapter<Attendan
         }
         void onBindViewHolder(int position){
             mDataNotAdded.moveToPosition(position);
-            String tmp=mDataNotAdded.getString(mDataNotAdded.getColumnIndex(DolabElKhedmaContract.MainDataEnrty.COLUMNS_NAME));
-            String tmp2=mDataNotAdded.getString(mDataNotAdded.getColumnIndex(DolabElKhedmaContract.AttendanceEntry.COLUMNS_Date));
-            mName.setText(tmp + " "+ tmp2);
         }
 
         @Override
         public void onClick(View v) {
-            int position=getAdapterPosition();
-            mDataNotAdded.moveToPosition(position);
-            String tmp2=mDataNotAdded.getString(mDataNotAdded.getColumnIndex(DolabElKhedmaContract.MainDataEnrty._ID));
-            mOnAttendanceRemoved.OnRemoveHandler(tmp2);
+            mOnAttendanceRemoved.OnRemoveHandler("data removed");
         }
     }
 }
