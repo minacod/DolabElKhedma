@@ -24,7 +24,8 @@
     <!--TODO simple_angle -->
     <string name="firebase_maleSimpleAngle">male_simpleAngel</string>
     <string name="firebase_angel">angels</string>
-    <string name="firebase_attendance">attendance</string>
+    <string name="firebase_male_attendance">male_attendance</string>
+    <string name="firebase_female_attendance">female_attendance</string>
     <string name="firebase_phone">phone</string>
     <string name="firebase_dob">dob</string>
 

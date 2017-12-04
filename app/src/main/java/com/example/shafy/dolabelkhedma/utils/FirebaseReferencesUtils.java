@@ -20,6 +20,8 @@ public class FirebaseReferencesUtils {
     private static DatabaseReference angelsRef;
     private static DatabaseReference maleSimpleAngelsRef;
     private static DatabaseReference femaleSimpleAngelsRef;
+    private static DatabaseReference maleAngelsAttendanceRef;
+    private static DatabaseReference femaleAngelsAttendanceRef;
     private static DatabaseReference phoneRef;
     private static DatabaseReference dobRef;
     private static FirebaseStorage mFS;
@@ -50,12 +52,6 @@ public class FirebaseReferencesUtils {
         return mFS;
     }
 
-    public static DatabaseReference getAttendanceReference(Context context, FirebaseDatabase fdb) {
-        DatabaseReference attendanceRef = fdb.getReference(context.getString(R.string.firebase_attendance));
-        attendanceRef.keepSynced(true);
-        return attendanceRef;
-    }
-
     public static DatabaseReference getDobReference(Context context, FirebaseDatabase fdb) {
         if(dobRef==null){
             dobRef = fdb.getReference(context.getString(R.string.firebase_dob));
@@ -72,31 +68,6 @@ public class FirebaseReferencesUtils {
     }
     public static StorageReference getAngelStorageReference(Context context,FirebaseStorage fs){
         return fs.getReference().child(context.getString(R.string.firebase_angel));
-    }
-    private static ChildEventListener getAngelsRefListener(final HashMap<String, Angel> angelsMap,
-                                                          final ArrayList<String> angelsIds) {
-        return new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Angel newAngel = dataSnapshot.getValue(Angel.class);
-                String angelId = dataSnapshot.getKey();
-
-                angelsMap.put(angelId, newAngel);
-                angelsIds.add(angelId);
-            }
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-            }
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-            }
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        };
     }
 
     public static DatabaseReference getSimpleAngelsReference(Context context, FirebaseDatabase fdb, boolean gender) {
@@ -124,29 +95,28 @@ public class FirebaseReferencesUtils {
         return femaleSimpleAngelsRef;
     }
 
-    public static ChildEventListener getSimpleAngelsRefListener(final HashMap<String, String> simpleAngelsMap,
-                                                           final ArrayList<String> simpleAngelsIds) {
-        return new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                String newSimpleAngel = dataSnapshot.getValue(String.class);
-                String simpleAngelId = dataSnapshot.getKey();
+    public static DatabaseReference getAngelsAttendanceReference(Context context, FirebaseDatabase fdb, boolean gender) {
+        DatabaseReference angelsAttendanceRef;
+        if(gender) {
+            angelsAttendanceRef = getMaleAngelsAttendanceRef(context, fdb);
+        } else {
+            angelsAttendanceRef = getFemaleAngelsAttendanceRef(context, fdb);
+        }
+        angelsAttendanceRef.keepSynced(true);
+        return angelsAttendanceRef;
+    }
 
-                simpleAngelsMap.put(simpleAngelId, newSimpleAngel);
-                simpleAngelsIds.add(simpleAngelId);
-            }
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-            }
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-            }
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        };
+    private static DatabaseReference getMaleAngelsAttendanceRef(Context context, FirebaseDatabase fdb) {
+        if (maleAngelsAttendanceRef == null) {
+            maleAngelsAttendanceRef = fdb.getReference(context.getString(R.string.firebase_male_attendance));
+        }
+        return maleAngelsAttendanceRef;
+    }
+
+    private static DatabaseReference getFemaleAngelsAttendanceRef(Context context, FirebaseDatabase fdb) {
+        if (femaleAngelsAttendanceRef== null) {
+            femaleAngelsAttendanceRef = fdb.getReference(context.getString(R.string.firebase_female_attendance));
+        }
+        return femaleAngelsAttendanceRef;
     }
 }

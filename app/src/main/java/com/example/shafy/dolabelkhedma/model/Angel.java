@@ -3,6 +3,7 @@ package com.example.shafy.dolabelkhedma.model;
 
 public class Angel {
     private String mName;
+    private int mHomeNum;
     private String mAddress;
     private boolean mGender;
     private int mClass;
@@ -10,12 +11,14 @@ public class Angel {
     private int mCoins;
     private int mScore;
     private String mFather;
+    private int mLastScore;
 
     public Angel() {
     }
 
-    public Angel(String mName, String mAddress, boolean mGender, int mClass, String mFacebook, int mCoins, int mScore, String mFather) {
+    public Angel(String mName,int homeNum,String mAddress, boolean mGender, int mClass, String mFacebook, int mCoins, int mScore, String mFather) {
         this.mName = mName;
+        this.mHomeNum = homeNum;
         this.mAddress = mAddress;
         this.mGender = mGender;
         this.mClass = mClass;
@@ -87,5 +90,21 @@ public class Angel {
 
     public void setmFather(String mFather) {
         this.mFather = mFather;
+    }
+
+    public int getmHomeNum() {
+        return mHomeNum;
+    }
+
+    public void setmHomeNum(int mHomeNum) {
+        this.mHomeNum = mHomeNum;
+    }
+
+    public int getmLastScore() {
+        return mLastScore;
+    }
+
+    public void setmLastScore(int mLastScore) {
+        this.mLastScore = mLastScore;
     }
 }

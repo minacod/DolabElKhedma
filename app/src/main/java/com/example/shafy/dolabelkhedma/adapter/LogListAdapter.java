@@ -1,31 +1,19 @@
 package com.example.shafy.dolabelkhedma.adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.support.constraint.ConstraintLayout;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.shafy.dolabelkhedma.R;
 import com.example.shafy.dolabelkhedma.ui.GlideApp;
-import com.example.shafy.dolabelkhedma.ui.GlideRequest;
 import com.example.shafy.dolabelkhedma.utils.FirebaseReferencesUtils;
-import com.firebase.ui.storage.images.FirebaseImageLoader;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -93,11 +81,11 @@ public class LogListAdapter extends RecyclerView.Adapter<LogListAdapter.ViewHold
 
         }
         void onBindViewHolder(int position){
-            if(position%2!=0){
+            /*if(position%2!=0){
                 parent.setRotation(180);
                 mName.setRotation(180);
                 imageView.setRotation(180);
-            }
+            }*/
 
             String id = mSimpleAngelsIds.get(position);
             mName.setText(mSimpleAngelsMap.get(id));

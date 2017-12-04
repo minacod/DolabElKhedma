@@ -12,6 +12,9 @@ import android.widget.TextView;
 
 import com.example.shafy.dolabelkhedma.R;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 /**
  * Created by shafy on 19/10/2017.
  */
@@ -19,16 +22,19 @@ import com.example.shafy.dolabelkhedma.R;
 public class AttendanceRemovingListAdapter extends RecyclerView.Adapter<AttendanceRemovingListAdapter.ViewHolder> {
 
     private OnAttendanceRemoved mOnAttendanceRemoved;
-    Cursor mDataNotAdded;
+    private HashMap<String, String> mSimpleAngelsAttendanceMap;
+    private ArrayList<String> mSimpleAngelsAttendanceIds;
 
-    public AttendanceRemovingListAdapter(OnAttendanceRemoved onAttendanceRemoved,Cursor notAdded){
+    public AttendanceRemovingListAdapter(OnAttendanceRemoved onAttendanceRemoved, HashMap<String, String> simpleAngelsAttendanceMap
+            , ArrayList<String> simpleAngelsAttendanceIds){
         mOnAttendanceRemoved=onAttendanceRemoved;
-        mDataNotAdded=notAdded;
+        mSimpleAngelsAttendanceMap=simpleAngelsAttendanceMap;
+        mSimpleAngelsAttendanceIds=simpleAngelsAttendanceIds;
         notifyDataSetChanged();
     }
 
     public interface OnAttendanceRemoved{
-        void OnRemoveHandler(String postion);
+        void OnRemoveHandler(String id,String name);
     }
 
     @Override
@@ -47,10 +53,12 @@ public class AttendanceRemovingListAdapter extends RecyclerView.Adapter<Attendan
 
     @Override
     public int getItemCount() {
-        if(mDataNotAdded==null)
+
+        if(mSimpleAngelsAttendanceIds ==null)
             return 0;
         else
-            return mDataNotAdded.getCount();
+            return mSimpleAngelsAttendanceIds.size();
+
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
@@ -60,6 +68,8 @@ public class AttendanceRemovingListAdapter extends RecyclerView.Adapter<Attendan
         ImageView mAdd;
         LinearLayout right;
         LinearLayout left;
+        String mID;
+        String angelName;
         public ViewHolder(View itemView) {
             super(itemView);
             mContext=itemView.getContext();
@@ -74,12 +84,14 @@ public class AttendanceRemovingListAdapter extends RecyclerView.Adapter<Attendan
 
         }
         void onBindViewHolder(int position){
-            mDataNotAdded.moveToPosition(position);
+           mID = mSimpleAngelsAttendanceIds.get(position);
+           angelName =mSimpleAngelsAttendanceMap.get(mID);
+           mName.setText(angelName);
         }
 
         @Override
         public void onClick(View v) {
-            mOnAttendanceRemoved.OnRemoveHandler("data removed");
+            mOnAttendanceRemoved.OnRemoveHandler(mID,angelName);
         }
     }
 }

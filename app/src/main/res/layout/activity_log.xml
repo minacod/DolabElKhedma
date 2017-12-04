@@ -7,18 +7,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
-    tools:context="com.example.shafy.dolabelkhedma.ui.AttendanceActivity">
-
-    <android.support.design.widget.FloatingActionButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
-        android:layout_marginEnd="16dp"
-        android:layoutDirection="ltr"
-        android:id="@+id/add_angel"
-        android:src="@drawable/ic_add"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+    tools:context="com.example.shafy.dolabelkhedma.ui.LogActivity">
 
 
     <android.support.design.widget.TabLayout
@@ -46,5 +35,19 @@
         app:layout_constraintVertical_bias="0.0">
 
     </android.support.v4.view.ViewPager>
+
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:layout_marginEnd="16dp"
+        android:onClick="add"
+        android:layoutDirection="ltr"
+        android:id="@+id/add_angel"
+        android:src="@drawable/ic_add"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
 
 </android.support.constraint.ConstraintLayout>

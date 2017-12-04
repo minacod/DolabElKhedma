@@ -87,4 +87,17 @@ public class FirebaseDatabaseUtils {
                                        String simpleAngel, String angelId, String angelClass) {
         simpleAngelRef.child("class_" + angelClass).child(angelId).setValue(simpleAngel);
     }
+
+    public static void addAngelAttendance(DatabaseReference angelAttendanceRef,DatabaseReference angelRef,
+                                       String simpleAngel, String angelId, String angelClass,String date) {
+        angelRef.child(angelId).child("attendance").child(date).setValue(true);
+        angelAttendanceRef.child(date).child("class_"+String.valueOf(angelClass)).child(angelId).setValue(simpleAngel);
+    }
+
+    public static void removeAngelAttendance(DatabaseReference angelAttendanceRef,DatabaseReference angelRef,
+                                          String simpleAngel, String angelId, String angelClass,String date) {
+        angelRef.child(angelId).child("attendance").child(date).removeValue();
+        angelAttendanceRef.child(date).child("class_"+String.valueOf(angelClass)).child(angelId).removeValue();
+    }
+
 }

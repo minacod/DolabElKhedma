@@ -184,8 +184,8 @@ public class AddingAngelActivity extends AppCompatActivity {
     void addData(){
 
         String name = mBinding.etName.getText().toString();
-        String add = (mBinding.etHomeNumber.getText().toString() +" "+ mBinding.etAddress.getText().toString()) ;
-        //String classNum = mBinding.etClass.getText().toString();
+        String homeNum = mBinding.etHomeNumber.getText().toString();
+        String add = mBinding.etAddress.getText().toString() ;
         String fbProfileUrl = mBinding.etFbProfileUrl.getText().toString();
         String coins = mBinding.etCoins.getText().toString();
         String score = mBinding.etScore.getText().toString();
@@ -204,11 +204,26 @@ public class AddingAngelActivity extends AppCompatActivity {
 
         boolean gender = mBinding.rbMale.isChecked();
 
-        if(name.equals("")||add.equals("")||mClassNum.equals("")||coins.equals("")||score.equals("")){
+        if(name.equals("")||homeNum.equals("")||add.equals("")||mClassNum.equals("")||coins.equals("")||score.equals("")){
+            Toast.makeText(this,"بيانات غير مكتمله",Toast.LENGTH_SHORT).show();
             return;
+        }
+        else {
+            mBinding.etName.setText("");
+            mBinding.etHomeNumber.setText("");
+            mBinding.etAddress.setText("");
+            mBinding.etFbProfileUrl.setText("");
+            mBinding.etCoins.setText("");
+            mBinding.etScore.setText("");
+            mBinding.etDob.setText("");
+            mBinding.etPFatherName.setText("");
+            mBinding.etAngelPhone.setText("");
+            mBinding.etDadPhone.setText("");
+            mBinding.etMomPhone.setText("");
         }
         Angel angel =new Angel(
                 name,
+                Integer.parseInt(homeNum),
                 add,
                 gender,
                 Integer.parseInt(mClassNum),

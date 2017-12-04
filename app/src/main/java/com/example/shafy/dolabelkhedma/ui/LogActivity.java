@@ -2,9 +2,7 @@ package com.example.shafy.dolabelkhedma.ui;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -44,26 +42,16 @@ public class LogActivity extends AppCompatActivity implements LogListAdapter.OnP
      * The {@link ViewPager} that will host the section contents.
      */
     private  ViewPager mViewPager;
-    private static SQLiteDatabase mDb;
-    private static FirebaseDatabase mFDb;
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        updatePager();
-    }
-
-
+    private static FirebaseDatabase sFDb;
     private static LogListAdapter.OnPersonClicked mOnPersonClicked;
-    private static String[] CLASS= new String[]{"1","2","3"};
     private static  boolean gender;
     private static int classNumber;
-    private FloatingActionButton fab;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log);
-        mFDb = FirebaseReferencesUtils.getSyncedFirebaseInstanse();
+        sFDb = FirebaseReferencesUtils.getSyncedFirebaseInstanse();
         if(getSupportActionBar()!=null)
             getSupportActionBar().setElevation(0);
 
@@ -80,15 +68,13 @@ public class LogActivity extends AppCompatActivity implements LogListAdapter.OnP
 
         TabLayout tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
+    }
 
-        fab= findViewById(R.id.add_angel);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(LogActivity.this,AddingAngelActivity.class));
-            }
-        });
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updatePager();
     }
 
     public void fillPager(){
@@ -100,6 +86,10 @@ public class LogActivity extends AppCompatActivity implements LogListAdapter.OnP
 
         mAttendanceTapAdapter.notifyDataSetChanged();
 
+    }
+
+    public void add(View view){
+        startActivity(new Intent(LogActivity.this,AddingAngelActivity.class));
     }
 
 
@@ -232,7 +222,7 @@ public class LogActivity extends AppCompatActivity implements LogListAdapter.OnP
 
 
 
-            DatabaseReference simpleAngleRef= FirebaseReferencesUtils.getSimpleAngelsReference(getContext(),mFDb,gender).child("class_"+String.valueOf(classNumber));
+            DatabaseReference simpleAngleRef= FirebaseReferencesUtils.getSimpleAngelsReference(getContext(), sFDb,gender).child("class_"+String.valueOf(classNumber));
             Query querySimpleAngle = simpleAngleRef.orderByValue();
             final HashMap<String, String> simpleAngelsMap=new HashMap<String, String>();
             final ArrayList<String> simpleAngelsIds=new ArrayList<String>();

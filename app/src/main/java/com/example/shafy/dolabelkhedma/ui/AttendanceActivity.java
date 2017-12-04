@@ -1,16 +1,18 @@
 package com.example.shafy.dolabelkhedma.ui;
 
 import android.content.Context;
-import android.database.Cursor;
+import android.os.Build;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,8 +25,24 @@ import android.widget.Spinner;
 import com.example.shafy.dolabelkhedma.R;
 import com.example.shafy.dolabelkhedma.adapter.AttendanceAddingListAdapter;
 import com.example.shafy.dolabelkhedma.adapter.AttendanceRemovingListAdapter;
+import com.example.shafy.dolabelkhedma.data.FirebaseDatabaseUtils;
+import com.example.shafy.dolabelkhedma.utils.FirebaseReferencesUtils;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 
-public class AttendanceActivity extends AppCompatActivity implements AttendanceRemovingListAdapter.OnAttendanceRemoved,AttendanceAddingListAdapter.OnAttendanceAdding {
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+
+public class AttendanceActivity extends AppCompatActivity implements
+        AttendanceRemovingListAdapter.OnAttendanceRemoved,
+        AttendanceAddingListAdapter.OnAttendanceAdding {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -40,26 +58,50 @@ public class AttendanceActivity extends AppCompatActivity implements AttendanceR
      * The {@link ViewPager} that will host the section contents.
      */
     private  ViewPager mViewPager;
+    private static AttendanceRemovingListAdapter.OnAttendanceRemoved sRemoved;
+    private static AttendanceAddingListAdapter.OnAttendanceAdding sAdding;
+    private static  boolean sGender;
+    private int sClassNumber;
+    private static FirebaseDatabase sFDb;
+    private static DatabaseReference attendanceRef;
+    private static DatabaseReference simpleAngleRef;
+    private static DatabaseReference angelRef;
 
-    private static AttendanceRemovingListAdapter.OnAttendanceRemoved removed;
-    private static AttendanceAddingListAdapter.OnAttendanceAdding adding;
 
-    private static  int gender;
-    private static int classNumber;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_attendance);
         if(getSupportActionBar()!=null)
             getSupportActionBar().setElevation(0);
-        removed=this;
-        adding=this;
-        gender=1;
+        sFDb=FirebaseReferencesUtils.getSyncedFirebaseInstanse();
+        sRemoved = this;
+        sAdding = this;
+        sGender = true;
+        angelRef = FirebaseReferencesUtils.getAngelsReference(this,sFDb);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
 
         mViewPager = findViewById(R.id.container);
         mViewPager.setRotation(180);
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                sClassNumber = position;
+                Log.d("lalala",String.valueOf(sClassNumber));
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
 
         fillPager();
 
@@ -86,7 +128,7 @@ public class AttendanceActivity extends AppCompatActivity implements AttendanceR
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.attendance_manu, menu);
         MenuItem item = menu.findItem(R.id.spinner);
-        final Spinner spinner = (Spinner) MenuItemCompat.getActionView(item);
+        final Spinner spinner = (Spinner) item.getActionView();
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.spinner_list_item_array, android.R.layout.simple_spinner_item);
@@ -97,11 +139,11 @@ public class AttendanceActivity extends AppCompatActivity implements AttendanceR
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Context context =view.getContext();
                 if(parent.getItemAtPosition(position).equals(context.getString(R.string.boys))){
-                    gender=1;
+                    sGender = true;
                     updatePager();
                 }
                 else {
-                    gender=0;
+                    sGender = false;
                     updatePager();
                 }
             }
@@ -125,13 +167,22 @@ public class AttendanceActivity extends AppCompatActivity implements AttendanceR
         return super.onOptionsItemSelected(item);
     }
     @Override
-    public void OnAddingHandler(Cursor data ,int position) {
-
+    public void OnAddingHandler(String id ,String name) {
+        Calendar c = Calendar.getInstance();
+        Date cc = c.getTime();
+        String d = new SimpleDateFormat("yyyy-MM-dd").format(cc);
+        FirebaseDatabaseUtils.addAngelAttendance(attendanceRef,angelRef,name,id,String.valueOf(sClassNumber+1),d);
     }
     @Override
-    public void OnRemoveHandler(String position) {
+    public void OnRemoveHandler(String id ,String name) {
+
+        Calendar c = Calendar.getInstance();
+        Date cc = c.getTime();
+        String d = new SimpleDateFormat("yyyy-MM-dd").format(cc);
+        FirebaseDatabaseUtils.removeAngelAttendance(attendanceRef,angelRef,name,id,String.valueOf(sClassNumber+1),d);
 
     }
+
 
 
     public class AttendanceTapAdapter extends FragmentPagerAdapter {
@@ -202,10 +253,112 @@ public class AttendanceActivity extends AppCompatActivity implements AttendanceR
                                  Bundle savedInstanceState) {
             mRootView = inflater.inflate(R.layout.fragment_attendance, container, false);
             mRootView.setRotation(180);
-            classNumber= getArguments().getInt(ARG_SECTION_NUMBER)-1;
+            int classNum = getArguments().getInt(ARG_SECTION_NUMBER);
 
-            /*RecyclerView rv =(RecyclerView)mRootView.findViewById(R.id.rv_attendance_active);
-            AttendanceRemovingListAdapter mAdapter=new AttendanceRemovingListAdapter( removed,mAdded);
+            //TODO move it to timeUtils
+            Calendar c = Calendar.getInstance();
+            Date cc = c.getTime();
+            String d = new SimpleDateFormat("yyyy-MM-dd").format(cc);
+            attendanceRef = FirebaseReferencesUtils.getAngelsAttendanceReference(getContext(),sFDb, sGender);
+            Query queryAngelsAttendance = attendanceRef.child(d).child("class_"+String.valueOf(classNum)).orderByValue();
+            final HashMap<String, String> angelsAttendanceMap=new HashMap<String, String>();
+            final ArrayList<String> angelsAttendanceIds=new ArrayList<String>();
+
+            final AttendanceRemovingListAdapter mAdapter=new AttendanceRemovingListAdapter(sRemoved,angelsAttendanceMap,angelsAttendanceIds);
+            simpleAngleRef = FirebaseReferencesUtils.getSimpleAngelsReference(getContext(),sFDb, sGender);
+            Query querySimpleAngle = simpleAngleRef.child("class_"+String.valueOf(classNum)).orderByValue();
+            final HashMap<String, String> simpleAngelsMap = new HashMap<String, String>();
+            final ArrayList<String> simpleAngelsIds = new ArrayList<String>();
+
+
+            final AttendanceAddingListAdapter mAdapter2=new AttendanceAddingListAdapter(sAdding,simpleAngelsMap,simpleAngelsIds);
+
+            querySimpleAngle.addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                    String angelName = dataSnapshot.getValue(String.class);
+                    String angelId = dataSnapshot.getKey();
+                    if(angelName!=null&&!(angelName.equals(angelsAttendanceMap.get(angelId)))) {
+                        simpleAngelsMap.put(angelId, angelName);
+                        simpleAngelsIds.add(angelId);
+                    }
+                    mAdapter2.notifyDataSetChanged();
+                }
+                @Override
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                    String newSimpleAngel = dataSnapshot.getValue(String.class);
+                    String simpleAngelId = dataSnapshot.getKey();
+                    if(Build.VERSION.SDK_INT>=24)
+                        simpleAngelsMap.replace(simpleAngelId,newSimpleAngel);
+                    else {
+                        simpleAngelsMap.remove(simpleAngelId);
+                        simpleAngelsMap.put(simpleAngelId,newSimpleAngel);
+                    }
+                    mAdapter2.notifyDataSetChanged();
+                }
+                @Override
+                public void onChildRemoved(DataSnapshot dataSnapshot) {
+                    String simpleAngelId = dataSnapshot.getKey();
+                    simpleAngelsMap.remove(simpleAngelId);
+                    simpleAngelsIds.remove(simpleAngelsIds.indexOf(simpleAngelId));
+                    mAdapter2.notifyDataSetChanged();
+                }
+                @Override
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                }
+            });
+
+
+            queryAngelsAttendance.addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                    String newSimpleAngel = dataSnapshot.getValue(String.class);
+                    String simpleAngelId = dataSnapshot.getKey();
+                    angelsAttendanceMap.put(simpleAngelId, newSimpleAngel);
+                    angelsAttendanceIds.add(simpleAngelId);
+                    simpleAngelsMap.remove(simpleAngelId);
+                    simpleAngelsIds.remove(simpleAngelId);
+                    mAdapter.notifyDataSetChanged();
+                    mAdapter2.notifyDataSetChanged();
+                }
+                @Override
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                    String newSimpleAngel = dataSnapshot.getValue(String.class);
+                    String simpleAngelId = dataSnapshot.getKey();
+                    if(Build.VERSION.SDK_INT>=24)
+                        angelsAttendanceMap.replace(simpleAngelId,newSimpleAngel);
+                    else {
+                        angelsAttendanceMap.remove(simpleAngelId);
+                        angelsAttendanceMap.put(simpleAngelId,newSimpleAngel);
+                    }
+                    mAdapter.notifyDataSetChanged();
+                }
+                @Override
+                public void onChildRemoved(DataSnapshot dataSnapshot) {
+                    String simpleAngelId = dataSnapshot.getKey();
+                    String simpleAngelName=dataSnapshot.getValue(String.class);
+                    angelsAttendanceMap.remove(simpleAngelId);
+                    angelsAttendanceIds.remove(simpleAngelId);
+                    simpleAngelsMap.put(simpleAngelId,simpleAngelName);
+                    simpleAngelsIds.add(simpleAngelId);
+                    mAdapter.notifyDataSetChanged();
+                    mAdapter2.notifyDataSetChanged();
+                }
+                @Override
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                }
+            });
+
+
+
+
+            RecyclerView rv = mRootView.findViewById(R.id.rv_attendance_active);
             LinearLayoutManager layoutManager =new LinearLayoutManager(mRootView.getContext(),LinearLayoutManager.VERTICAL,false){
                 @Override
                 public boolean canScrollVertically() {
@@ -216,9 +369,8 @@ public class AttendanceActivity extends AppCompatActivity implements AttendanceR
             rv.setAdapter(mAdapter);
             rv.setHasFixedSize(true);
 
-            AttendanceAddingListAdapter mAdapter2=new AttendanceAddingListAdapter(adding,mNotAdded);
-            RecyclerView rv2 =(RecyclerView)mRootView.findViewById(R.id.rv_attendance_passive);
-            LinearLayoutManager layoutManager2 =new LinearLayoutManager(mRootView.getContext(),LinearLayoutManager.VERTICAL,false){
+            RecyclerView rv2 =mRootView.findViewById(R.id.rv_attendance_passive);
+            LinearLayoutManager layoutManager2 =new LinearLayoutManager(mRootView.getContext(), LinearLayoutManager.VERTICAL,false){
                 @Override
                 public boolean canScrollVertically() {
                     return false;
@@ -226,7 +378,7 @@ public class AttendanceActivity extends AppCompatActivity implements AttendanceR
             };
             rv2.setLayoutManager(layoutManager2);
             rv2.setAdapter(mAdapter2);
-            rv2.setHasFixedSize(true);*/
+            rv2.setHasFixedSize(true);
 
             return mRootView;
         }

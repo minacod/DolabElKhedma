@@ -12,6 +12,9 @@ import android.widget.TextView;
 
 import com.example.shafy.dolabelkhedma.R;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 /**
  * Created by shafy on 19/10/2017.
  */
@@ -19,16 +22,20 @@ import com.example.shafy.dolabelkhedma.R;
 public class AttendanceAddingListAdapter extends RecyclerView.Adapter<AttendanceAddingListAdapter.ViewHolder> {
 
     private OnAttendanceAdding mOnAttendanceAdding;
-    private  Cursor mDataAdded;
+    private HashMap<String, String> mSimpleAngelsMap;
+    private ArrayList<String> mSimpleAngelsIds;
+    private int offset=0;
+    public AttendanceAddingListAdapter(OnAttendanceAdding onAttendanceAdding, HashMap<String, String> simpleAngelsMap, ArrayList<String> simpleAngelsIds){
 
-    public AttendanceAddingListAdapter(OnAttendanceAdding onAttendanceAdding,Cursor added){
         mOnAttendanceAdding = onAttendanceAdding;
-        mDataAdded=added;
+        mSimpleAngelsMap=simpleAngelsMap;
+        mSimpleAngelsIds=simpleAngelsIds;
+        offset=0;
         notifyDataSetChanged();
     }
 
     public interface OnAttendanceAdding{
-        void OnAddingHandler(Cursor data, int position);
+        void OnAddingHandler(String id,String name);
     }
 
     @Override
@@ -47,10 +54,10 @@ public class AttendanceAddingListAdapter extends RecyclerView.Adapter<Attendance
 
     @Override
     public int getItemCount() {
-        if(mDataAdded==null)
+        if(mSimpleAngelsIds ==null)
             return 0;
         else
-            return mDataAdded.getCount();
+            return mSimpleAngelsIds.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
@@ -75,12 +82,16 @@ public class AttendanceAddingListAdapter extends RecyclerView.Adapter<Attendance
         }
         void onBindViewHolder(int position){
 
+            String id = mSimpleAngelsIds.get(position+offset);
+            mName.setText(mSimpleAngelsMap.get(id));
         }
 
         @Override
         public void onClick(View v) {
             int position=getAdapterPosition();
-            mOnAttendanceAdding.OnAddingHandler(mDataAdded,position);
+            String id =mSimpleAngelsIds.get(position);
+            String name = mSimpleAngelsMap.get(id);
+            mOnAttendanceAdding.OnAddingHandler(id,name);
         }
     }
 }
