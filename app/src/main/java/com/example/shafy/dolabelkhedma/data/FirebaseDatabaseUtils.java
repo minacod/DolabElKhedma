@@ -28,13 +28,13 @@ public class FirebaseDatabaseUtils {
     }
 
     public static void addAngel(final Context context, DatabaseReference angelRef,
-                                final DatabaseReference simpleAngelRef,final Angel angel,String angelClass,
+                                final DatabaseReference simpleAngelRef,final Angel angel,
                                 StorageReference storageRef,Bitmap profileImage,
                                 final DatabaseReference phoneRef, Phone[] phones,
                                 DatabaseReference dobRef,String dob) {
 
         final String angelId = angelRef.push().getKey();
-        if(phoneRef!=null)
+        if(storageRef!=null)
             addProfileImage(context,storageRef,profileImage,angelId);
 
         addDob(dobRef,angelId,dob);
@@ -42,7 +42,7 @@ public class FirebaseDatabaseUtils {
         addPhoneNumber(phoneRef,angelId,phones);
 
         String simpleAngel = angel.getmName();
-        addSimpleAngel(simpleAngelRef, simpleAngel, angelId, angelClass);
+        addSimpleAngel(simpleAngelRef, simpleAngel, angelId, String.valueOf(angel.getmClass()));
 
         angelRef.child(angelId).setValue(angel).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -51,6 +51,73 @@ public class FirebaseDatabaseUtils {
             }
         });
     }
+
+    public static void editAngel(final Context context, DatabaseReference angelRef, String angelId ,
+                                final DatabaseReference simpleAngelRef,final Angel angel,String angelPrevClass,
+                                StorageReference storageRef,Bitmap profileImage,
+                                final DatabaseReference phoneRef, Phone[] phones,
+                                DatabaseReference dobRef,String dob) {
+
+
+        if(storageRef!=null)
+            addProfileImage(context,storageRef,profileImage,angelId);
+
+        addDob(dobRef,angelId,dob);
+
+        addPhoneNumber(phoneRef,angelId,phones);
+
+        String simpleAngel = angel.getmName();
+        removeSimpleAngel(simpleAngelRef,angelId,angelPrevClass);
+        addSimpleAngel(simpleAngelRef, simpleAngel, angelId, String.valueOf(angel.getmClass()));
+
+        angelRef.child(angelId).setValue(angel).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                Toast.makeText(context, context.getString(R.string.angel_added), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
+    public static void removeAngel(final Context context, DatabaseReference angelRef,
+                                   String angelId , String angelClass,
+                                 final DatabaseReference simpleAngelRef,
+                                 StorageReference storageRef,
+                                 final DatabaseReference phoneRef,
+                                 DatabaseReference dobRef) {
+
+
+        if(storageRef!=null)
+            removeProfileImage(context,storageRef,angelId);
+
+        removeDob(dobRef,angelId);
+        removePhoneNumber(phoneRef,angelId);
+        removeSimpleAngel(simpleAngelRef,angelId,angelClass);
+
+        angelRef.child(angelId).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                Toast.makeText(context, context.getString(R.string.angel_removed), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private static void removeProfileImage(Context context, StorageReference storageRef, String angelId) {
+        storageRef.child(angelId).child("pp").delete();
+    }
+
+    private static void removeSimpleAngel(DatabaseReference simpleAngelRef, String angelId,String angelClass) {
+        simpleAngelRef.child("class_" + angelClass).child(angelId).removeValue();
+    }
+
+    private static void removePhoneNumber(DatabaseReference phoneRef, String angelId) {
+        phoneRef.child(angelId).removeValue();
+    }
+
+    private static void removeDob(DatabaseReference dobRef, String angelId) {
+        dobRef.child(angelId).removeValue();
+    }
+
 
     private static void addPhoneNumber(DatabaseReference phoneRef,String id,Phone[] phones){
         for (int i=0;i<phones.length;i++)

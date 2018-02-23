@@ -1,7 +1,10 @@
 package com.example.shafy.dolabelkhedma.model;
 
 
-public class Angel {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Angel implements Parcelable{
     private String mName;
     private int mHomeNum;
     private String mAddress;
@@ -107,4 +110,53 @@ public class Angel {
     public void setmLastScore(int mLastScore) {
         this.mLastScore = mLastScore;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(mName);
+        dest.writeInt(mHomeNum);
+        dest.writeString(mAddress);
+        if(mGender)
+            dest.writeInt(1);
+        else
+            dest.writeInt(0);
+        dest.writeInt(mClass);
+        dest.writeString(mFacebook);
+        dest.writeInt(mCoins);
+        dest.writeInt(mScore);
+        dest.writeString(mFather);
+
+    }
+
+    public Angel(Parcel source) {
+
+        this.mName = source.readString();
+        this.mHomeNum = source.readInt();
+        this.mAddress = source.readString();
+        this.mGender = source.readInt() == 1;
+        this.mClass = source.readInt();
+        this.mFacebook = source.readString();
+        this.mCoins = source.readInt();
+        this.mScore = source.readInt();
+        this.mFather = source.readString();
+
+    }
+
+    public static final Parcelable.Creator<Angel> CREATOR
+            = new Parcelable.Creator<Angel>(){
+        @Override
+        public Angel createFromParcel(Parcel source) {
+            return new Angel(source);
+        }
+
+        @Override
+        public Angel[] newArray(int size) {
+            return new Angel[size];
+        }
+    };
 }

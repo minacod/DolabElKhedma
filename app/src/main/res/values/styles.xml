@@ -23,4 +23,9 @@
         <item name="android:layoutDirection">rtl</item>
     </style>
 
+    <style name="AlertDialogCustom" parent="Base.Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColorPrimary">@color/colorPrimaryDark</item>
+    </style>
+
 </resources>

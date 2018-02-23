@@ -46,6 +46,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityOptio
         DatabaseReference AngleData= FirebaseReferencesUtils.getAngelsReference(MainActivity.this, mFdb);
         DatabaseReference maleSimpleAngleData=FirebaseReferencesUtils.getSimpleAngelsReference(MainActivity.this, mFdb, true);
         DatabaseReference femaleSimpleAngleData=FirebaseReferencesUtils.getSimpleAngelsReference(MainActivity.this, mFdb, false);
+        FirebaseReferencesUtils.getAngelsAttendanceReference(MainActivity.this, mFdb,true);
+        FirebaseReferencesUtils.getAngelsAttendanceReference(MainActivity.this, mFdb,false);
         FirebaseReferencesUtils.getPhoneReference(MainActivity.this, mFdb);
         DatabaseReference dobRef =FirebaseReferencesUtils.getDobReference(MainActivity.this, mFdb);
 

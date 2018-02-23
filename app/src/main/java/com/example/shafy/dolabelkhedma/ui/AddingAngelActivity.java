@@ -36,6 +36,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.ArrayList;
+
 import static com.example.shafy.dolabelkhedma.utils.FirebaseReferencesUtils.getSyncedFirebaseInstanse;
 
 public class AddingAngelActivity extends AppCompatActivity {
@@ -44,7 +46,11 @@ public class AddingAngelActivity extends AppCompatActivity {
     FirebaseDatabase mFdb;
     Bitmap mProfileImage;
     String mClassNum;
-
+    private String mAngelId;
+    private Angel mAngel;
+    private ArrayList<Phone> mPhones;
+    private String mDob;
+    private boolean mEditAngel;
     public static final int PICK_IMAGE = 1;
     private static final int REQUEST_STORAGE_PERMISSION = 1;
 
@@ -55,15 +61,13 @@ public class AddingAngelActivity extends AppCompatActivity {
         mFdb = getSyncedFirebaseInstanse();
         mBinding= DataBindingUtil.setContentView(this,R.layout.activity_adding_angel);
 
-        mBinding.etDob.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus){
-                DialogFragment newFragment = new DatePickerFragment();
-                newFragment.show(getSupportFragmentManager(), "datePicker");
-                }
-            }
-        });
+        Intent i = getIntent();
+        mEditAngel = i.getBooleanExtra("edit",false);
+        mAngelId = i.getStringExtra("id");
+        mAngel = i.getParcelableExtra("angel");
+        mDob = i.getStringExtra("dob");
+        mPhones = i.getParcelableArrayListExtra("phones");
+
         mClassNum="1";
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.ClassesList, android.R.layout.simple_spinner_item);
@@ -114,8 +118,39 @@ public class AddingAngelActivity extends AppCompatActivity {
 
             }
         });
-    }
+        if(mAngel!=null)
+            updateUi();
 
+        mBinding.etDob.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus){
+                    DialogFragment newFragment = new DatePickerFragment();
+                    newFragment.show(getSupportFragmentManager(), "datePicker");
+                }
+            }
+        });
+    }
+    private void updateUi(){
+
+        mBinding.etName.setText(mAngel.getmName());
+        mBinding.etHomeNumber.setText(String.valueOf(mAngel.getmHomeNum()));
+        mBinding.etAddress.setText(mAngel.getmAddress());
+        mBinding.etFbProfileUrl.setText(mAngel.getmFacebook());
+        mBinding.etCoins.setText(String.valueOf(mAngel.getmCoins()));
+        mBinding.etScore.setText(String.valueOf(mAngel.getmScore()));
+        mBinding.etDob.setFocusable(false);
+        mBinding.etDob.setText(mDob);
+        mBinding.etPFatherName.setText(mAngel.getmFather());
+        mBinding.etDob.setFocusable(true);
+        mBinding.etAngelPhone.setText(mPhones.get(0).getmPhone());
+        mBinding.etDadPhone.setText(mPhones.get(1).getmPhone());
+        mBinding.etMomPhone.setText(mPhones.get(2).getmPhone());
+        mBinding.rbMale.setChecked(mAngel.ismGender());
+        mBinding.rbFemale.setChecked(!mAngel.ismGender());
+        mBinding.etClass.setSelection(mAngel.getmClass()-1);
+
+    }
     private void launchGallary(){
         Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
         getIntent.setType("image/*");
@@ -220,6 +255,7 @@ public class AddingAngelActivity extends AppCompatActivity {
             mBinding.etAngelPhone.setText("");
             mBinding.etDadPhone.setText("");
             mBinding.etMomPhone.setText("");
+            mBinding.ivAngelPhoto.setImageResource(R.drawable.contact_avatar);
         }
         Angel angel =new Angel(
                 name,
@@ -241,11 +277,20 @@ public class AddingAngelActivity extends AppCompatActivity {
                 mFdb,gender);
         DatabaseReference phoneData= FirebaseReferencesUtils.getPhoneReference(AddingAngelActivity.this,mFdb);
         DatabaseReference dobData = FirebaseReferencesUtils.getDobReference(AddingAngelActivity.this,mFdb);
-        FirebaseDatabaseUtils.addAngel(AddingAngelActivity.this,
-                angleData,SimpleAngleData,
-                angel,mClassNum,
-                sr,mProfileImage,phoneData,phones,
-                dobData,dob);
+        if(!mEditAngel){
+            FirebaseDatabaseUtils.addAngel(AddingAngelActivity.this,
+                    angleData,SimpleAngleData,
+                    angel,
+                    sr,mProfileImage,phoneData,phones,
+                    dobData,dob);
+        }
+        else {
+            FirebaseDatabaseUtils.editAngel(AddingAngelActivity.this,
+                    angleData,mAngelId,SimpleAngleData,
+                    angel,String.valueOf(mAngel.getmClass()),
+                    sr,mProfileImage,phoneData,phones,
+                    dobData,dob);
+        }
     }
 
 

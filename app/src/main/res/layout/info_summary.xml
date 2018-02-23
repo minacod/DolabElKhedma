@@ -35,7 +35,7 @@
         app:layout_constraintLeft_toLeftOf="@+id/tv_class_number"
         app:layout_constraintRight_toRightOf="@+id/tv_class_number"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="الفصل" />
+        android:text="@string/xml_class" />
 
     <TextView
         android:id="@+id/tv_score_number"
@@ -60,7 +60,7 @@
         app:layout_constraintLeft_toLeftOf="@+id/tv_score_number"
         app:layout_constraintRight_toRightOf="@+id/tv_score_number"
         app:layout_constraintTop_toTopOf="@+id/tv_attendance"
-        tools:text="الاسكور" />
+        android:text="@string/xml_score" />
 
     <TextView
         android:id="@+id/tv_coins_number"
@@ -85,7 +85,7 @@
         app:layout_constraintLeft_toLeftOf="@+id/tv_coins_number"
         app:layout_constraintRight_toRightOf="@+id/tv_coins_number"
         app:layout_constraintTop_toTopOf="@+id/tv_attendance"
-        tools:text="الكوينز" />
+        android:text="@string/xml_coins" />
 
     <TextView
         android:id="@+id/tv_attendance_number"
@@ -110,7 +110,7 @@
         app:layout_constraintLeft_toLeftOf="@+id/tv_attendance_number"
         app:layout_constraintRight_toRightOf="@+id/tv_attendance_number"
         app:layout_constraintTop_toTopOf="@+id/tv_class"
-        tools:text="الحضور" />
+        android:text="@string/xml_att" />
 
     <android.support.constraint.Guideline
         android:layout_width="wrap_content"

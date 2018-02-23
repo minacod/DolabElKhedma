@@ -1,6 +1,7 @@
 package com.example.shafy.dolabelkhedma.ui;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.support.design.widget.TabLayout;
@@ -8,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -34,7 +36,7 @@ import com.google.firebase.database.Query;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class LogActivity extends AppCompatActivity implements LogListAdapter.OnPersonClicked{
+public class LogActivity extends AppCompatActivity implements LogListAdapter.OnPersonClicked,LogListAdapter.OnPersonLongClicked{
 
     private static AttendanceTapAdapter mAttendanceTapAdapter;
 
@@ -44,6 +46,7 @@ public class LogActivity extends AppCompatActivity implements LogListAdapter.OnP
     private  ViewPager mViewPager;
     private static FirebaseDatabase sFDb;
     private static LogListAdapter.OnPersonClicked mOnPersonClicked;
+    private static LogListAdapter.OnPersonLongClicked mOnPersonLongClicked;
     private static  boolean gender;
     private static int classNumber;
 
@@ -56,6 +59,7 @@ public class LogActivity extends AppCompatActivity implements LogListAdapter.OnP
             getSupportActionBar().setElevation(0);
 
         mOnPersonClicked =this;
+        mOnPersonLongClicked = this;
         gender=true;
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
@@ -149,6 +153,16 @@ public class LogActivity extends AppCompatActivity implements LogListAdapter.OnP
         startActivity(i);
     }
 
+    @Override
+    public void onPersonLongClickedHandler(String id) {
+        RemoveAngelDialogFragment fragment =new RemoveAngelDialogFragment();
+        fragment.setmId(id);
+        fragment.setmClass(String.valueOf(mViewPager.getCurrentItem()+1));
+
+        fragment.setmGender(gender);
+        fragment.show(getSupportFragmentManager(),"remove_angel");
+    }
+
 
     public class AttendanceTapAdapter extends FragmentPagerAdapter {
 
@@ -228,7 +242,7 @@ public class LogActivity extends AppCompatActivity implements LogListAdapter.OnP
             final ArrayList<String> simpleAngelsIds=new ArrayList<String>();
 
 
-            final LogListAdapter mAdapter=new LogListAdapter(mOnPersonClicked,simpleAngelsMap,simpleAngelsIds);
+            final LogListAdapter mAdapter=new LogListAdapter(mOnPersonClicked,mOnPersonLongClicked,simpleAngelsMap,simpleAngelsIds);
 
             querySimpleAngle.addChildEventListener(new ChildEventListener() {
                 @Override

@@ -25,10 +25,12 @@ import java.util.HashMap;
 public class LogListAdapter extends RecyclerView.Adapter<LogListAdapter.ViewHolder> {
 
     private OnPersonClicked mOnPersonClicked;
+    private OnPersonLongClicked mOnPersonLongClicked;
     private HashMap<String, String> mSimpleAngelsMap;
     private ArrayList<String> mSimpleAngelsIds;
-    public LogListAdapter(OnPersonClicked onPersonClicked, HashMap<String, String> simpleAngelsMap, ArrayList<String> simpleAngelsIds){
+    public LogListAdapter(OnPersonClicked onPersonClicked, OnPersonLongClicked onPersonLongClicked, HashMap<String, String> simpleAngelsMap, ArrayList<String> simpleAngelsIds){
         mOnPersonClicked = onPersonClicked;
+        mOnPersonLongClicked = onPersonLongClicked;
         mSimpleAngelsMap=simpleAngelsMap;
         mSimpleAngelsIds=simpleAngelsIds;
         notifyDataSetChanged();
@@ -36,6 +38,10 @@ public class LogListAdapter extends RecyclerView.Adapter<LogListAdapter.ViewHold
 
     public interface OnPersonClicked{
         void onPersonClickedHandler(String id);
+    }
+
+    public interface OnPersonLongClicked{
+        void onPersonLongClickedHandler(String id);
     }
 
     @Override
@@ -60,7 +66,7 @@ public class LogListAdapter extends RecyclerView.Adapter<LogListAdapter.ViewHold
             return mSimpleAngelsIds.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,View.OnLongClickListener{
 
         Context mContext;
         TextView mName;
@@ -78,6 +84,7 @@ public class LogListAdapter extends RecyclerView.Adapter<LogListAdapter.ViewHold
             imageView= itemView.findViewById(R.id.profile_image);
             parent = itemView.findViewById(R.id.cl_log_activity_list_itm);
             itemView.setOnClickListener(this);
+            itemView.setOnLongClickListener(this);
 
         }
         void onBindViewHolder(int position){
@@ -104,6 +111,13 @@ public class LogListAdapter extends RecyclerView.Adapter<LogListAdapter.ViewHold
             int position=getAdapterPosition();
 
             mOnPersonClicked.onPersonClickedHandler(mSimpleAngelsIds.get(position));
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+            int position=getAdapterPosition();
+            mOnPersonLongClicked.onPersonLongClickedHandler(mSimpleAngelsIds.get(position));
+            return true;
         }
     }
 }
