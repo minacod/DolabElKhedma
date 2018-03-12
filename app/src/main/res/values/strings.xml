@@ -49,5 +49,10 @@
     <string name="xml_att">الحضور</string>
     <string name="xml_coins">الكوينز</string>
     <string name="xml_score">الاسكور</string>
+    <string name="facebook_profile">بروفايل فيسبوك</string>
+    <string name="send_sms">ابعت رسالة</string>
+    <string name="call">اتصل</string>
+    <string name="call_dad">اتصل بالاب</string>
+    <string name="call_mam">اتصل بالام</string>
 
 </resources>

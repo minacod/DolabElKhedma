@@ -121,13 +121,11 @@ public class AddingAngelActivity extends AppCompatActivity {
         if(mAngel!=null)
             updateUi();
 
-        mBinding.etDob.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        mBinding.ivDobSelect.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus){
-                    DialogFragment newFragment = new DatePickerFragment();
-                    newFragment.show(getSupportFragmentManager(), "datePicker");
-                }
+            public void onClick(View v) {
+                DialogFragment newFragment = new DatePickerFragment();
+                newFragment.show(getSupportFragmentManager(), "datePicker");
             }
         });
     }

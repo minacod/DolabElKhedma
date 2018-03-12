@@ -29,8 +29,8 @@
 
             <ImageView
                 android:id="@+id/iv_angel_photo"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="128dp"
+                android:layout_height="128dp"
                 android:src="@drawable/contact_avatar"
                 android:contentDescription="@string/person_s_image" />
         </LinearLayout>
@@ -52,27 +52,35 @@
         <EditText
             android:id="@+id/et_dob"
             android:layout_width="0dp"
-            android:layoutDirection="ltr"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="8dp"
             android:ems="10"
+            android:enabled="false"
             android:hint="@string/activity_adding_dob"
             android:inputType="date"
-            app:layout_constraintBottom_toBottomOf="@+id/ll_angel_photo"
+            android:textAlignment="viewEnd"
+            android:layoutDirection="ltr"
             app:layout_constraintEnd_toEndOf="@+id/et_name"
-            app:layout_constraintStart_toStartOf="@+id/guideline8" />
+            app:layout_constraintStart_toStartOf="@+id/guideline6"
+            app:layout_constraintTop_toBottomOf="@+id/et_name" />
 
         <Spinner
             android:id="@+id/et_class"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:minHeight="100dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
             android:ems="10"
             android:layoutDirection="ltr"
-            app:layout_constraintBottom_toBottomOf="@+id/et_dob"
-            app:layout_constraintEnd_toStartOf="@+id/guideline8"
+            android:minHeight="100dp"
+            app:layout_constraintBottom_toBottomOf="@+id/ll_angel_photo"
+            app:layout_constraintEnd_toStartOf="@+id/ll_angel_photo"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="@+id/et_name"
-            app:layout_constraintTop_toTopOf="@+id/et_dob" />
+            app:layout_constraintTop_toBottomOf="@+id/et_dob"
+            app:layout_constraintVertical_bias="1.0" />
 
         <TextView
             android:id="@+id/head1"
@@ -326,7 +334,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.5" />
+            app:layout_constraintGuide_percent="0.61" />
 
         <EditText
             android:id="@+id/et_score"
@@ -403,6 +411,18 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/rb_male" />
+
+        <ImageView
+            android:id="@+id/iv_dob_select"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginTop="8dp"
+            android:src="@drawable/ic_friday"
+            android:layoutDirection="ltr"
+            app:layout_constraintBottom_toBottomOf="@+id/et_dob"
+            app:layout_constraintEnd_toStartOf="@+id/et_dob"
+            app:layout_constraintStart_toStartOf="@+id/et_name"
+            app:layout_constraintTop_toTopOf="@+id/et_dob" />
 
 
     </android.support.constraint.ConstraintLayout>

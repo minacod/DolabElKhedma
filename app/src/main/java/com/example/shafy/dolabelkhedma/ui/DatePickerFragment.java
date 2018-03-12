@@ -13,6 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 
 /**
  * Created by shafy on 03/11/2017.
@@ -34,11 +35,11 @@ public class DatePickerFragment extends DialogFragment
 
     public void onDateSet(DatePicker view, int year, int month, int day) {
         // Do something with the date chosen by the user
-        EditText date=(EditText)getActivity().findViewById(R.id.et_dob);
+        EditText date= getActivity().findViewById(R.id.et_dob);
         Calendar c =Calendar.getInstance();
         c.set(year,month,day);
         Date cc = c.getTime();
-        String d = new SimpleDateFormat("yyyy-MM-dd").format(cc);
+        String d = new SimpleDateFormat("yyyy-MM-dd",Locale.ENGLISH).format(cc);
         date.setText(d);
     }
 }

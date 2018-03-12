@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 
 public class AttendanceActivity extends AppCompatActivity implements
         AttendanceRemovingListAdapter.OnAttendanceRemoved,
@@ -170,7 +171,7 @@ public class AttendanceActivity extends AppCompatActivity implements
     public void OnAddingHandler(String id ,String name) {
         Calendar c = Calendar.getInstance();
         Date cc = c.getTime();
-        String d = new SimpleDateFormat("yyyy-MM-dd").format(cc);
+        String d = new SimpleDateFormat("yyyy-MM-dd",Locale.ENGLISH).format(cc);
         FirebaseDatabaseUtils.addAngelAttendance(attendanceRef,angelRef,name,id,String.valueOf(sClassNumber+1),d);
     }
     @Override
@@ -178,7 +179,7 @@ public class AttendanceActivity extends AppCompatActivity implements
 
         Calendar c = Calendar.getInstance();
         Date cc = c.getTime();
-        String d = new SimpleDateFormat("yyyy-MM-dd").format(cc);
+        String d = new SimpleDateFormat("yyyy-MM-dd",Locale.ENGLISH).format(cc);
         FirebaseDatabaseUtils.removeAngelAttendance(attendanceRef,angelRef,name,id,String.valueOf(sClassNumber+1),d);
 
     }
@@ -258,7 +259,7 @@ public class AttendanceActivity extends AppCompatActivity implements
             //TODO move it to timeUtils
             Calendar c = Calendar.getInstance();
             Date cc = c.getTime();
-            String d = new SimpleDateFormat("yyyy-MM-dd").format(cc);
+            String d = new SimpleDateFormat("yyyy-MM-dd",Locale.ENGLISH).format(cc);
             attendanceRef = FirebaseReferencesUtils.getAngelsAttendanceReference(getContext(),sFDb, sGender);
             Query queryAngelsAttendance = attendanceRef.child(d).child("class_"+String.valueOf(classNum)).orderByValue();
             final HashMap<String, String> angelsAttendanceMap=new HashMap<String, String>();
