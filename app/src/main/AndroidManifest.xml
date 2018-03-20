@@ -3,8 +3,10 @@
     package="com.example.shafy.dolabelkhedma">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -14,6 +16,7 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/ic_notification" />
+
         <activity android:name=".ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,28 +28,28 @@
             android:name=".ui.AttendanceActivity"
             android:label="@string/main_add_atten"
             android:launchMode="singleTop"
-            android:parentActivityName=".ui.MainActivity"
+            android:parentActivityName=".ui.HomeActivity"
             android:theme="@style/AttendanceTheme" />
         <activity
             android:name=".ui.FridayActivity"
             android:label="@string/main_friday"
             android:launchMode="singleTop"
-            android:parentActivityName=".ui.MainActivity" />
+            android:parentActivityName=".ui.HomeActivity" />
         <activity
             android:name=".ui.TripActivity"
             android:label="@string/main_trip"
             android:launchMode="singleTop"
-            android:parentActivityName=".ui.MainActivity" />
+            android:parentActivityName=".ui.HomeActivity" />
         <activity
             android:name=".ui.DolabActivity"
             android:label="@string/main_dolab"
             android:launchMode="singleTop"
-            android:parentActivityName=".ui.MainActivity" />
+            android:parentActivityName=".ui.HomeActivity" />
         <activity
             android:name=".ui.LogActivity"
             android:label="@string/main_log"
             android:launchMode="singleTop"
-            android:parentActivityName=".ui.MainActivity"
+            android:parentActivityName=".ui.HomeActivity"
             android:theme="@style/AttendanceTheme" />
         <activity
             android:name=".ui.AngelActivity"
@@ -54,7 +57,10 @@
             android:launchMode="singleTop"
             android:parentActivityName=".ui.LogActivity"
             android:theme="@style/AngelActivity" />
-        <activity android:name=".ui.AddingAngelActivity"></activity>
+        <activity android:name=".ui.AddingAngelActivity" />
+        <activity android:name=".ui.HomeActivity">
+
+        </activity>
     </application>
 
 </manifest>

@@ -1,14 +1,12 @@
 package com.example.shafy.dolabelkhedma.ui;
 
 import android.Manifest;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
@@ -21,8 +19,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
-import android.widget.Spinner;
-import android.widget.Switch;
 import android.widget.Toast;
 
 import com.example.shafy.dolabelkhedma.R;
@@ -53,6 +49,7 @@ public class AddingAngelActivity extends AppCompatActivity {
     private boolean mEditAngel;
     public static final int PICK_IMAGE = 1;
     private static final int REQUEST_STORAGE_PERMISSION = 1;
+    private static final int CROP_IMAGE = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -179,23 +176,46 @@ public class AddingAngelActivity extends AppCompatActivity {
         }
     }
 
+    private void performCrop(Uri picUri) {
+        try {
+            Intent cropIntent = new Intent("com.android.camera.action.CROP");
+            // indicate image type and Uri
+            cropIntent.setDataAndType(picUri, "image/*");
+            // set crop properties here
+            cropIntent.putExtra("crop", true);
+            // indicate aspect of desired crop
+            cropIntent.putExtra("aspectX", 1);
+            cropIntent.putExtra("aspectY", 1);
+            // indicate output X and Y
+            cropIntent.putExtra("outputX", 128);
+            cropIntent.putExtra("outputY", 128);
+            // retrieve data on return
+            cropIntent.putExtra("return-data", true);
+            // start the activity - we handle returning in onActivityResult
+            startActivityForResult(cropIntent, CROP_IMAGE);
+        }
+        // respond to users whose devices do not support the crop action
+        catch (ActivityNotFoundException anfe) {
+            // display an error message
+            String errorMessage = "Whoops - your device doesn't support the crop action!";
+            Toast toast = Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT);
+            toast.show();
+        }
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         if (requestCode == PICK_IMAGE && data!=null) {
             Uri imageUri = data.getData();
+            performCrop(imageUri);
+        }else if(requestCode == CROP_IMAGE && data!=null){
+            Bundle extras = data.getExtras();
+            if (extras != null) {
+                mProfileImage = extras.getParcelable("data");
+                mBinding.ivAngelPhoto.setImageBitmap(mProfileImage);
+            }
 
-            String[] filePath = { MediaStore.Images.Media.DATA };
-            Cursor cursor = getContentResolver().query(imageUri, filePath, null, null, null);
-            cursor.moveToFirst();
-            String imagePath = cursor.getString(cursor.getColumnIndex(filePath[0]));
-
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-            mProfileImage = BitmapFactory.decodeFile(imagePath, options);
-            mBinding.ivAngelPhoto.setImageBitmap(mProfileImage);
-
-            cursor.close();
         }
     }
     @Override

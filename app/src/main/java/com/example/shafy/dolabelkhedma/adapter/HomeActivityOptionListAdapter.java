@@ -14,11 +14,11 @@ import com.example.shafy.dolabelkhedma.R;
  * Created by shafy on 18/10/2017.
  */
 
-public class MainActivityOptionListAdapter extends RecyclerView.Adapter<MainActivityOptionListAdapter.MainActivityOptionListViewHolder >{
+public class HomeActivityOptionListAdapter extends RecyclerView.Adapter<HomeActivityOptionListAdapter.MainActivityOptionListViewHolder >{
 
 
     private OnOptionClicked mOnOptionClicked;
-    public MainActivityOptionListAdapter(OnOptionClicked onOptionClicked){
+    public HomeActivityOptionListAdapter(OnOptionClicked onOptionClicked){
         mOnOptionClicked=onOptionClicked;
     }
 
@@ -52,8 +52,8 @@ public class MainActivityOptionListAdapter extends RecyclerView.Adapter<MainActi
         public MainActivityOptionListViewHolder(View view){
             super(view);
             mContext =view.getContext();
-            mText=(TextView)view.findViewById(R.id.tv_main_option_text);
-            mImage=(ImageView)view.findViewById(R.id.iv_main_option_icon);
+            mText= view.findViewById(R.id.tv_main_option_text);
+            mImage= view.findViewById(R.id.iv_main_option_icon);
             view.setOnClickListener(this);
         }
 

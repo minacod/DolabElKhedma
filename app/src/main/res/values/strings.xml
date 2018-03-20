@@ -14,10 +14,10 @@
     <string name="angel_added">تمت الاضافه</string>
 
 
-
     <string name="app_name">دولاب الخدمة</string>
     <string name="main_add_atten">حضور اليوم</string>
-    <string name="main_activity">الصفحة الرئيسية</string>
+    <string name="main_activity">تسجيل الدخول</string>
+    <string name="home_activity">الصفحة الرئيسية</string>
     <string name="main_trip">الانشطة</string>
     <string name="main_friday">برنامج الجمعة</string>
     <string name="main_dolab">الدولاب</string>
@@ -54,5 +54,9 @@
     <string name="call">اتصل</string>
     <string name="call_dad">اتصل بالاب</string>
     <string name="call_mam">اتصل بالام</string>
+    <string name="data_not_found">مش متسجل</string>
+    <string name="varfication_mail_msg">بعتنا رسالة تأكيد للأيميل بتاعك</string>
+    <string name="offline_varifation_msg">افتح النت و اكد الايميل</string>
+    <string name="failed_msg">failed for some reason</string>
 
 </resources>

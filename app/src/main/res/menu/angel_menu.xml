@@ -5,19 +5,19 @@
     <item
         android:id="@+id/a_m_facebook"
         android:title="@string/facebook_profile"
-        android:icon="@drawable/ic_add"
+        android:icon="@drawable/ic_fb"
         app:showAsAction="always"
         />
     <item
         android:id="@+id/a_m_call"
         android:title="@string/call"
-        android:icon="@drawable/ic_add"
+        android:icon="@drawable/ic_call_white_48px"
         app:showAsAction="always"
         />
     <item
         android:id="@+id/a_m_send_msg"
         android:title="@string/send_sms"
-        android:icon="@drawable/ic_add"
+        android:icon="@drawable/ic_message_white_48px"
         app:showAsAction="ifRoom"
         />
     <item

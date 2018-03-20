@@ -2,6 +2,7 @@ package com.example.shafy.dolabelkhedma.ui;
 
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.shafy.dolabelkhedma.R;
 import com.example.shafy.dolabelkhedma.databinding.ActivityAngelBinding;
@@ -28,6 +30,7 @@ import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -35,6 +38,8 @@ public class AngelActivity extends AppCompatActivity {
 
     ActivityAngelBinding mMainBinding;
     private String mAngelId;
+    private Angel mAngel;
+    ArrayList<Phone> mPhones;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,11 +57,11 @@ public class AngelActivity extends AppCompatActivity {
         DatabaseReference dobRef = FirebaseReferencesUtils.getDobReference(this,fdb);
         DatabaseReference phonesRef = FirebaseReferencesUtils.getPhoneReference(this,fdb);
 
-        final ArrayList<Phone> phones = new ArrayList<>();
+        mPhones = new ArrayList<>();
         phonesRef.child(mAngelId).child("0").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                phones.add(dataSnapshot.getValue(Phone.class));
+                mPhones.add(dataSnapshot.getValue(Phone.class));
             }
 
             @Override
@@ -67,7 +72,7 @@ public class AngelActivity extends AppCompatActivity {
         phonesRef.child(mAngelId).child("1").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                phones.add(dataSnapshot.getValue(Phone.class));
+                mPhones.add(dataSnapshot.getValue(Phone.class));
             }
 
             @Override
@@ -78,7 +83,7 @@ public class AngelActivity extends AppCompatActivity {
         phonesRef.child(mAngelId).child("2").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                phones.add(dataSnapshot.getValue(Phone.class));
+                mPhones.add(dataSnapshot.getValue(Phone.class));
             }
 
             @Override
@@ -130,8 +135,8 @@ public class AngelActivity extends AppCompatActivity {
         reference.child(mAngelId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                angel[0] = dataSnapshot.getValue(Angel.class);
-                updateUi(angel[0], dob[0],phones,attendance);
+                mAngel = dataSnapshot.getValue(Angel.class);
+                updateUi(dob[0],attendance);
             }
 
             @Override
@@ -149,15 +154,15 @@ public class AngelActivity extends AppCompatActivity {
                 .into(mMainBinding.ivAngel);
     }
 
-    void updateUi(final Angel angel, final String dob, final ArrayList<Phone> phones,ArrayList<String> attendance){
-        mMainBinding.collapsingToolbar.setTitle(angel.getmName());
+    void updateUi( final String dob,ArrayList<String> attendance){
+        mMainBinding.collapsingToolbar.setTitle(mAngel.getmName());
         mMainBinding.collapsingToolbar.setContentScrimColor(ContextCompat.getColor(this,R.color.colorPrimary));
-        mMainBinding.iPersonInfo.iInfoSummary.tvCoinsNumber.setText(String.valueOf(angel.getmCoins()));
-        mMainBinding.iPersonInfo.iInfoSummary.tvScoreNumber.setText(String.valueOf(angel.getmScore()));
+        mMainBinding.iPersonInfo.iInfoSummary.tvCoinsNumber.setText(String.valueOf(mAngel.getmCoins()));
+        mMainBinding.iPersonInfo.iInfoSummary.tvScoreNumber.setText(String.valueOf(mAngel.getmScore()));
         mMainBinding.iPersonInfo.iInfoSummary.tvAttendanceNumber.setText(String.valueOf(attendance.size()));
-        mMainBinding.iPersonInfo.iInfoSummary.tvClassNumber.setText(String.valueOf(angel.getmClass()));
-        mMainBinding.iPersonInfo.iMainInfo.tvAddress.setText(String.valueOf(angel.getmAddress()));
-        mMainBinding.iPersonInfo.iMainInfo.tvBuildingNumber.setText(String.valueOf(angel.getmHomeNum()));
+        mMainBinding.iPersonInfo.iInfoSummary.tvClassNumber.setText(String.valueOf(mAngel.getmClass()));
+        mMainBinding.iPersonInfo.iMainInfo.tvAddress.setText(String.valueOf(mAngel.getmAddress()));
+        mMainBinding.iPersonInfo.iMainInfo.tvBuildingNumber.setText(String.valueOf(mAngel.getmHomeNum()));
         mMainBinding.iPersonInfo.iMainInfo.tvMmyy.setText(dob.substring(0,7));
         mMainBinding.iPersonInfo.iMainInfo.tvDd.setText(dob.substring(8,10));
 
@@ -167,9 +172,9 @@ public class AngelActivity extends AppCompatActivity {
              Intent i = new Intent(AngelActivity.this,AddingAngelActivity.class);
              i.putExtra("edit",true);
              i.putExtra("id",mAngelId);
-             i.putExtra("angel",angel);
+             i.putExtra("angel",mAngel);
              i.putExtra("dob",dob);
-             i.putExtra("phones",phones);
+             i.putExtra("phones",mPhones);
              startActivity(i);
             }
         });
@@ -211,21 +216,61 @@ public class AngelActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
+        String tmp;
         switch (id){
             case R.id.a_m_facebook:
-
+                tmp=mAngel.getmFacebook();
+                if(!(tmp==null||tmp.equals(""))){
+                    if(tmp.charAt(0)!='h')
+                     tmp="https://"+tmp;
+                    Uri uri = Uri.parse(tmp);
+                    Intent i = new Intent(Intent.ACTION_VIEW,uri);
+                    startActivity(i);
+                }
+                else
+                    Toast.makeText(this, R.string.data_not_found,Toast.LENGTH_LONG).show();
                 break;
             case R.id.a_m_call:
-
+                tmp=mPhones.get(0).getmPhone();
+                if(!(tmp==null||tmp.equals(""))){
+                    Uri uri = Uri.parse("tel:" +tmp);
+                    Intent i = new Intent(Intent.ACTION_DIAL);
+                    i.setData(uri);
+                    startActivity(i);
+                }
+                else
+                    Toast.makeText(this, R.string.data_not_found,Toast.LENGTH_LONG).show();
                 break;
             case R.id.a_m_send_msg:
-
+                tmp=mPhones.get(0).getmPhone();
+                if(!(tmp==null||tmp.equals(""))) {
+                    Intent i = new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", tmp, null));
+                    startActivity(i);
+                }
+                else
+                    Toast.makeText(this, R.string.data_not_found,Toast.LENGTH_LONG).show();
                 break;
             case R.id.a_m_call_dad:
-
+                tmp=mPhones.get(1).getmPhone();
+                if(!(tmp==null||tmp.equals(""))){
+                    Uri uri = Uri.parse("tel:" +tmp);
+                    Intent i = new Intent(Intent.ACTION_DIAL);
+                    i.setData(uri);
+                    startActivity(i);
+                }
+                else
+                    Toast.makeText(this, R.string.data_not_found,Toast.LENGTH_LONG).show();
                 break;
             case R.id.a_m_call_mam:
-
+                tmp=mPhones.get(2).getmPhone();
+                if(!(tmp==null||tmp.equals(""))) {
+                    Uri uri = Uri.parse("tel:" + tmp);
+                    Intent i = new Intent(Intent.ACTION_DIAL);
+                    i.setData(uri);
+                    startActivity(i);
+                }
+                else
+                    Toast.makeText(this, R.string.data_not_found,Toast.LENGTH_LONG).show();
                 break;
             default:
                 return false;

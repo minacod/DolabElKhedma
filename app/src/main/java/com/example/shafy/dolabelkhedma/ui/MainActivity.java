@@ -1,90 +1,111 @@
 package com.example.shafy.dolabelkhedma.ui;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import com.example.shafy.dolabelkhedma.R;
-import com.example.shafy.dolabelkhedma.adapter.MainActivityOptionListAdapter;
-import com.example.shafy.dolabelkhedma.data.FirebaseDatabaseUtils;
-import com.example.shafy.dolabelkhedma.model.Angel;
-import com.example.shafy.dolabelkhedma.utils.FirebaseReferencesUtils;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.example.shafy.dolabelkhedma.utils.NetworksUtils;
+import com.firebase.ui.auth.AuthUI;
+import com.firebase.ui.auth.IdpResponse;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
-import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-import static com.example.shafy.dolabelkhedma.utils.FirebaseReferencesUtils.getSyncedFirebaseInstanse;
-
-public class MainActivity extends AppCompatActivity implements MainActivityOptionListAdapter.OnOptionClicked{
+public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
-    private RecyclerView mOptionsList;
-    private MainActivityOptionListAdapter mListAdapter;
-    FirebaseDatabase mFdb;
+    private static final int RC_SIGN_IN = 123;
+    private FirebaseUser mUser;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        auth();
         setContentView(R.layout.activity_main);
         setTitle(getString(R.string.main_activity));
+    }
 
-        mFdb =getSyncedFirebaseInstanse();
+    public void auth(View view){
+        auth();
+    }
 
-        //getting references to sync any data offline
+    private void auth(){
+        mUser = FirebaseAuth.getInstance().getCurrentUser();
+        if(mUser==null){
 
-        DatabaseReference AngleData= FirebaseReferencesUtils.getAngelsReference(MainActivity.this, mFdb);
-        DatabaseReference maleSimpleAngleData=FirebaseReferencesUtils.getSimpleAngelsReference(MainActivity.this, mFdb, true);
-        DatabaseReference femaleSimpleAngleData=FirebaseReferencesUtils.getSimpleAngelsReference(MainActivity.this, mFdb, false);
-        FirebaseReferencesUtils.getAngelsAttendanceReference(MainActivity.this, mFdb,true);
-        FirebaseReferencesUtils.getAngelsAttendanceReference(MainActivity.this, mFdb,false);
-        FirebaseReferencesUtils.getPhoneReference(MainActivity.this, mFdb);
-        DatabaseReference dobRef =FirebaseReferencesUtils.getDobReference(MainActivity.this, mFdb);
+            List<AuthUI.IdpConfig> providers = Collections.singletonList(
+                    new AuthUI.IdpConfig.EmailBuilder().build());
 
+            startActivityForResult(
+                    AuthUI.getInstance()
+                            .createSignInIntentBuilder()
+                            .setAvailableProviders(providers)
+                            .build(),
+                    RC_SIGN_IN);
 
-        mOptionsList = findViewById(R.id.rv_main_activity_options_list);
-        GridLayoutManager layoutManager=new GridLayoutManager(this,2, LinearLayoutManager.VERTICAL,false);
-        mOptionsList.setLayoutManager(layoutManager);
-        mListAdapter =new MainActivityOptionListAdapter(this);
-        mOptionsList.setAdapter(mListAdapter);
-        mOptionsList.setHasFixedSize(true);
+        }
+        else isVerified();
+    }
+    void isVerified(){
+        if(mUser.isEmailVerified())
+            launchHome();
+
+        else{
+            FirebaseAuth.getInstance().getCurrentUser().reload().addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    mUser=FirebaseAuth.getInstance().getCurrentUser();
+                    if(mUser!=null&&mUser.isEmailVerified())
+                        launchHome();
+                    else {
+                        if(NetworksUtils.isConnected(MainActivity.this))
+                            mUser.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        Toast.makeText(MainActivity.this, getString(R.string.varfication_mail_msg), Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            });
+                        else {
+                            Toast.makeText(MainActivity.this, getString(R.string.offline_varifation_msg), Toast.LENGTH_LONG).show();
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+    void launchHome(){
+        Intent i = new Intent(this,HomeActivity.class);
+        startActivity(i);
+        finish();
     }
 
     @Override
-    public void onClickListener(int position) {
-        Intent intent;
-        switch(position)
-        {
-            case 0:
-                intent=new Intent(MainActivity.this,AttendanceActivity.class);
-                startActivity(intent);
-                break;
-            case 1:
-                intent=new Intent(MainActivity.this,LogActivity.class);
-                startActivity(intent);
-                break;
-            case 2:
-                intent=new Intent(MainActivity.this,FridayActivity.class);
-                startActivity(intent);
-                break;
-            case 3:
-                intent=new Intent(MainActivity.this,DolabActivity.class);
-                startActivity(intent);
-                break;
-            case 4:
-                intent=new Intent(MainActivity.this,TripActivity.class);
-                startActivity(intent);
-                break;
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == RC_SIGN_IN) {
+            IdpResponse response = IdpResponse.fromResultIntent(data);
+
+            if (resultCode == RESULT_OK) {
+                mUser = FirebaseAuth.getInstance().getCurrentUser();
+                isVerified();
+                // ...
+            } else {
+                Log.e(TAG,getString(R.string.failed_msg));
+            }
         }
     }
 
