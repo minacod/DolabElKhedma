@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
@@ -32,7 +33,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 import static com.example.shafy.dolabelkhedma.utils.FirebaseReferencesUtils.getSyncedFirebaseInstanse;
 
@@ -179,19 +185,13 @@ public class AddingAngelActivity extends AppCompatActivity {
     private void performCrop(Uri picUri) {
         try {
             Intent cropIntent = new Intent("com.android.camera.action.CROP");
-            // indicate image type and Uri
             cropIntent.setDataAndType(picUri, "image/*");
-            // set crop properties here
             cropIntent.putExtra("crop", true);
-            // indicate aspect of desired crop
             cropIntent.putExtra("aspectX", 1);
             cropIntent.putExtra("aspectY", 1);
-            // indicate output X and Y
             cropIntent.putExtra("outputX", 128);
             cropIntent.putExtra("outputY", 128);
-            // retrieve data on return
             cropIntent.putExtra("return-data", true);
-            // start the activity - we handle returning in onActivityResult
             startActivityForResult(cropIntent, CROP_IMAGE);
         }
         // respond to users whose devices do not support the crop action
@@ -208,14 +208,29 @@ public class AddingAngelActivity extends AppCompatActivity {
     {
         if (requestCode == PICK_IMAGE && data!=null) {
             Uri imageUri = data.getData();
-            performCrop(imageUri);
+            Bitmap bitmap = null;
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(),imageUri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            String path = MediaStore.Images.Media.insertImage(this.getContentResolver(), bitmap, "Title", null);
+            Uri uri = Uri.parse(path);
+            performCrop(uri);
         }else if(requestCode == CROP_IMAGE && data!=null){
             Bundle extras = data.getExtras();
             if (extras != null) {
                 mProfileImage = extras.getParcelable("data");
                 mBinding.ivAngelPhoto.setImageBitmap(mProfileImage);
+            }else {
+                Bitmap bitmap = null;
+                try {
+                    mProfileImage = MediaStore.Images.Media.getBitmap(this.getContentResolver(),data.getData());
+                    mBinding.ivAngelPhoto.setImageBitmap(mProfileImage);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
-
         }
     }
     @Override
@@ -248,7 +263,7 @@ public class AddingAngelActivity extends AppCompatActivity {
         phones[0] = new Phone( "angel",mBinding.etAngelPhone.getText().toString());
         phones[1] = new Phone( "dad",mBinding.etDadPhone.getText().toString());
         phones[2] = new Phone( "mom",mBinding.etMomPhone.getText().toString());
-        // for future
+        //TODO for future
         //
         /*
         for(int i=0;i<3;i++)
@@ -303,9 +318,12 @@ public class AddingAngelActivity extends AppCompatActivity {
                     dobData,dob);
         }
         else {
+            Calendar c = Calendar.getInstance();
+            Date cc = c.getTime();
+            String d = new SimpleDateFormat("yyyy/MM/dd", Locale.ENGLISH).format(cc);
             FirebaseDatabaseUtils.editAngel(AddingAngelActivity.this,
                     angleData,mAngelId,SimpleAngleData,
-                    angel,String.valueOf(mAngel.getmClass()),
+                    angel,String.valueOf(mAngel.getmClass()),d,
                     sr,mProfileImage,phoneData,phones,
                     dobData,dob);
         }

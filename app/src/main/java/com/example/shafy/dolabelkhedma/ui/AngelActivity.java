@@ -49,6 +49,7 @@ public class AngelActivity extends AppCompatActivity {
         mMainBinding = DataBindingUtil.setContentView(this,R.layout.activity_angel);
         setSupportActionBar(mMainBinding.toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        mMainBinding.collapsingToolbar.setContentScrimColor(ContextCompat.getColor(this,R.color.colorPrimary));
         Intent i = getIntent();
         mAngelId = i.getStringExtra("id");
 
@@ -131,12 +132,24 @@ public class AngelActivity extends AppCompatActivity {
 
             }
         });
-        final Angel[] angel = {new Angel()};
+        final String[] lastUpdate = new String[1];
+        reference.child(mAngelId).child(getString(R.string.firebase_angle_last_update)).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                lastUpdate[0] = (String) dataSnapshot.getValue();
+                if(lastUpdate[0]==null||lastUpdate[0].equals(""))
+                    lastUpdate[0]=getString(R.string.not_updated);
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
         reference.child(mAngelId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mAngel = dataSnapshot.getValue(Angel.class);
-                updateUi(dob[0],attendance);
+                updateUi(dob[0],attendance,lastUpdate[0]);
             }
 
             @Override
@@ -154,9 +167,8 @@ public class AngelActivity extends AppCompatActivity {
                 .into(mMainBinding.ivAngel);
     }
 
-    void updateUi( final String dob,ArrayList<String> attendance){
+    void updateUi( final String dob,ArrayList<String> attendance,String lastUpdate){
         mMainBinding.collapsingToolbar.setTitle(mAngel.getmName());
-        mMainBinding.collapsingToolbar.setContentScrimColor(ContextCompat.getColor(this,R.color.colorPrimary));
         mMainBinding.iPersonInfo.iInfoSummary.tvCoinsNumber.setText(String.valueOf(mAngel.getmCoins()));
         mMainBinding.iPersonInfo.iInfoSummary.tvScoreNumber.setText(String.valueOf(mAngel.getmScore()));
         mMainBinding.iPersonInfo.iInfoSummary.tvAttendanceNumber.setText(String.valueOf(attendance.size()));
@@ -165,7 +177,7 @@ public class AngelActivity extends AppCompatActivity {
         mMainBinding.iPersonInfo.iMainInfo.tvBuildingNumber.setText(String.valueOf(mAngel.getmHomeNum()));
         mMainBinding.iPersonInfo.iMainInfo.tvMmyy.setText(dob.substring(0,7));
         mMainBinding.iPersonInfo.iMainInfo.tvDd.setText(dob.substring(8,10));
-
+        mMainBinding.tvLastEdit.setText(lastUpdate);
         mMainBinding.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

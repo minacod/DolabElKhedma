@@ -20,7 +20,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.example.shafy.dolabelkhedma.R;
 import com.example.shafy.dolabelkhedma.adapter.AttendanceAddingListAdapter;
@@ -58,11 +60,17 @@ public class AttendanceActivity extends AppCompatActivity implements
     /**
      * The {@link ViewPager} that will host the section contents.
      */
-    private  ViewPager mViewPager;
+    private ViewPager mViewPager;
+    private Button mDatePicker;
+    private TextView mCurrentDate;
+
     private static AttendanceRemovingListAdapter.OnAttendanceRemoved sRemoved;
     private static AttendanceAddingListAdapter.OnAttendanceAdding sAdding;
+
     private static  boolean sGender;
+
     private int sClassNumber;
+
     private static FirebaseDatabase sFDb;
     private static DatabaseReference attendanceRef;
     private static DatabaseReference simpleAngleRef;
@@ -81,6 +89,7 @@ public class AttendanceActivity extends AppCompatActivity implements
         sAdding = this;
         sGender = true;
         angelRef = FirebaseReferencesUtils.getAngelsReference(this,sFDb);
+
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
 

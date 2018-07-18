@@ -53,7 +53,7 @@ public class FirebaseDatabaseUtils {
     }
 
     public static void editAngel(final Context context, DatabaseReference angelRef, String angelId ,
-                                final DatabaseReference simpleAngelRef,final Angel angel,String angelPrevClass,
+                                final DatabaseReference simpleAngelRef,final Angel angel,String angelPrevClass,String lastUpdate,
                                 StorageReference storageRef,Bitmap profileImage,
                                 final DatabaseReference phoneRef, Phone[] phones,
                                 DatabaseReference dobRef,String dob) {
@@ -69,8 +69,18 @@ public class FirebaseDatabaseUtils {
         String simpleAngel = angel.getmName();
         removeSimpleAngel(simpleAngelRef,angelId,angelPrevClass);
         addSimpleAngel(simpleAngelRef, simpleAngel, angelId, String.valueOf(angel.getmClass()));
-
-        angelRef.child(angelId).setValue(angel).addOnCompleteListener(new OnCompleteListener<Void>() {
+        angelRef.child(angelId).child(context.getString(R.string.firebase_angle_last_update)).setValue(lastUpdate);
+        angelRef.child(angelId).child(context.getString(R.string.firebase_angle_name)).setValue(angel.getmName());
+        angelRef.child(angelId).child(context.getString(R.string.firebase_angle_address)).setValue(angel.getmAddress());
+        angelRef.child(angelId).child(context.getString(R.string.firebase_angle_class)).setValue(angel.getmClass());
+        angelRef.child(angelId).child(context.getString(R.string.firebase_angle_coins)).setValue(angel.getmCoins());
+        angelRef.child(angelId).child(context.getString(R.string.firebase_angle_facebook)).setValue(angel.getmFacebook());
+        angelRef.child(angelId).child(context.getString(R.string.firebase_angle_father)).setValue(angel.getmFather());
+        angelRef.child(angelId).child(context.getString(R.string.firebase_angle_home_num)).setValue(angel.getmHomeNum());
+        angelRef.child(angelId).child(context.getString(R.string.firebase_angle_last_score)).setValue(angel.getmLastScore());
+        angelRef.child(angelId).child(context.getString(R.string.firebase_angle_score)).setValue(angel.getmScore());
+        angelRef.child(angelId).child(context.getString(R.string.firebase_angle_gender)).setValue(angel.ismGender())
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 Toast.makeText(context, context.getString(R.string.angel_added), Toast.LENGTH_SHORT).show();

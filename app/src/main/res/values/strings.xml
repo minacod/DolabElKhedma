@@ -9,13 +9,24 @@
     <string name="firebase_female_attendance">female_attendance</string>
     <string name="firebase_phone">phone</string>
     <string name="firebase_dob">dob</string>
+    <string name="firebase_angle_last_update">mLastUpdate</string>
+    <string name="firebase_angle_name">mName</string>
+    <string name="firebase_angle_address">mAddress</string>
+    <string name="firebase_angle_class">mClass</string>
+    <string name="firebase_angle_coins">mCoins</string>
+    <string name="firebase_angle_facebook">mFacebook</string>
+    <string name="firebase_angle_father">mFather</string>
+    <string name="firebase_angle_home_num">mHomeNum</string>
+    <string name="firebase_angle_last_score">mLastScore</string>
+    <string name="firebase_angle_score">mScore</string>
+    <string name="firebase_angle_gender">mGender</string>
 
     <!-- Messages -->
     <string name="angel_added">تمت الاضافه</string>
 
 
     <string name="app_name">دولاب الخدمة</string>
-    <string name="main_add_atten">حضور اليوم</string>
+    <string name="main_add_atten">تسجيل الحضور</string>
     <string name="main_activity">تسجيل الدخول</string>
     <string name="home_activity">الصفحة الرئيسية</string>
     <string name="main_trip">الانشطة</string>
@@ -58,5 +69,8 @@
     <string name="varfication_mail_msg">بعتنا رسالة تأكيد للأيميل بتاعك</string>
     <string name="offline_varifation_msg">افتح النت و اكد الايميل</string>
     <string name="failed_msg">failed for some reason</string>
+    <string name="not_updated">مش متحدث</string>
+    <string name="last_update_title">اخر تحديث :</string>
+    <string name="date">Date</string>
 
 </resources>
